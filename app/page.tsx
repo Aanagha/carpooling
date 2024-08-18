@@ -50,8 +50,11 @@ export default function Home() {
     <>
       <header className="text-white p-2 relative overflow-hidden">
         <div className="z-10 w-full max-w-5xl mx-auto items-center justify-between font-mono text-sm flex flex-col lg:flex-row">
-        
+        <div className="flex items-center">
+          <Image src="vercel.svg" alt="Logo" width={100} height={1-0} />
+        </div>
        <div className="flex flex-row gap-4">
+        
         {user ? <>
           <p className="text-black">{user.name}</p>
           <Button onClick={logout}>Logout</Button>
@@ -60,8 +63,8 @@ export default function Home() {
             
 <div className="loader border-t-2 m-auto rounded-full border-gray-500 bg-gray-300 animate-spin
 aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
-            <DrawerDemo rideType="Sign Up" variant="default" bc="white" title="Signup"><Register/></DrawerDemo>
-          <DrawerDemo rideType="Login" variant="default" bc="white"  title="Login"><Login  /></DrawerDemo>
+            <DrawerDemo action={false} rideType="Sign Up" variant="default" bc="white" title="Signup"><Register/></DrawerDemo>
+          <DrawerDemo action={false} rideType="Login" variant="default" bc="white"  title="Login"><Login  /></DrawerDemo>
             </>
           }
         </>}
@@ -78,8 +81,8 @@ aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
             <blockquote className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 text-shadow">Ride Together, Save Together!</blockquote>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 text-shadow">Discover the convenience of carpooling, reduce fuel costs, and enhance your  experience.</p>
             <div className="flex flex-row justify-center items-center gap-6">
-              <DrawerDemo rideType="Offer ride" variant="default" bc="white"  title="Offer a Ride"><OfferRide/></DrawerDemo>
-              <DrawerDemo rideType="join ride" variant="outline" bc="black"  title="Join a Ride"><RideList  /></DrawerDemo>
+              <DrawerDemo action rideType="Offer ride" variant="default" bc="white"  title="Offer a Ride"><OfferRide/></DrawerDemo>
+              <DrawerDemo action rideType="join ride" variant="outline" bc="black"  title="Join a Ride"><RideList  /></DrawerDemo>
             </div>
            
           </section>

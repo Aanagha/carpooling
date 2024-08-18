@@ -54,7 +54,7 @@ const Login: React.FC = () => {
               className="p-2 border border-gray-300 rounded-md w-full"
             />
           </div>
-          <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+          <Button type="submit" className=" hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
             {loading ? 
 <div className="loader mx-auto border-t-2 rounded-full border-gray-500 bg-gray-300 animate-spin
 aspect-square w-8 flex justify-center items-center text-yellow-700"></div>: "Login"} 

@@ -16,16 +16,16 @@ import {
 
 export function DrawerDemo({
   bc,
-  children, variant, rideType, title
+  children, variant, rideType, title,action
 }: {
-  bc: string, children: React.ReactNode, variant: string, rideType: string, title: string
+  bc: string, children: React.ReactNode, variant: string, rideType: string, title: string,action : boolean
 }) {
 
   return (
     <Drawer>
       <DrawerTrigger asChild>
         <Button
-          className={`m-auto border-t-4 border-${bc} rounded-tl-full rounded-br-full`}
+          className={`m-auto border-t-4 border-${bc} ${action ? 'rounded-tl-full rounded-br-full' : ''}`}
           variant={variant as any}
           size="lg"
         >
