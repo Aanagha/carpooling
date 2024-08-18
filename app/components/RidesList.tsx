@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { reserveRide } from '@/lib/rides';
 import { Button } from '@/components/ui/button';
 import { account } from '@/lib/appwrite';
+import { toast } from 'sonner';
 const RideList = () => {
     const [rides, setRides] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -47,14 +48,17 @@ const RideList = () => {
   
     const handleReserveRide = async (rideId: string) => {
         if (!user) {
-            setMessage('Wallet address is required to reserve ride.');
+            setMessage('Please login first to  reserve a ride.');
+toast(message);
             return;
         }
         try {
             await reserveRide(rideId, user.$id);
             setMessage('Ride successfully reserved!');
+            toast(message);
         } catch (error:any) {
             setMessage(` ${error.message}`);
+            toast(message);
         }
     };
     return (
@@ -92,7 +96,7 @@ const RideList = () => {
                       
                             
                             </div>
-                            {message && <p>{message}</p>}
+                           
                         </div>
                     ))
                 ) : (
