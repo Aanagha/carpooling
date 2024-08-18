@@ -62,8 +62,8 @@ export default function Home() {
             
 <div className="loader border-t-2 m-auto rounded-full border-gray-500 bg-gray-300 animate-spin
 aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
-            <DrawerDemo rideType="Sign Up" variant="default" bc="white" children={<Register  />} title="Signup"/>
-          <DrawerDemo rideType="Login" variant="default" bc="white" children={<Login  />} title="Login"/>
+            <DrawerDemo rideType="Sign Up" variant="default" bc="white" title="Signup"><Register/></DrawerDemo>
+          <DrawerDemo rideType="Login" variant="default" bc="white"  title="Login"><Login  /></DrawerDemo>
             </>
           }
         </>}
@@ -80,8 +80,8 @@ aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
             <blockquote className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 text-shadow">Ride Together, Save Together!</blockquote>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 text-shadow">Discover the convenience of carpooling, reduce fuel costs, and enhance your  experience.</p>
             <div className="flex flex-row justify-center items-center gap-6">
-              <DrawerDemo rideType="Offer ride" variant="default" bc="white" children={<OfferRide/>} title="Offer a Ride"/>
-              <DrawerDemo rideType="join ride" variant="outline" bc="black" children={<RideList  />} title="Join a Ride"/>
+              <DrawerDemo rideType="Offer ride" variant="default" bc="white"  title="Offer a Ride"><OfferRide/></DrawerDemo>
+              <DrawerDemo rideType="join ride" variant="outline" bc="black"  title="Join a Ride"><RideList  /></DrawerDemo>
             </div>
            
           </section>

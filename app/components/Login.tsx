@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { account } from "@/lib/appwrite";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+
 
 
 const Login: React.FC = () => {
@@ -31,7 +31,7 @@ const Login: React.FC = () => {
         <form onSubmit={(e) => { e.preventDefault(); login(); }} className="space-y-4">
           <div className="flex flex-col mb-4">
             <Label className="text-sm font-bold mb-2" htmlFor="email">Email</Label>
-            <Input
+            <input
               type="email"
               id="email"
               placeholder="Email"
@@ -43,7 +43,7 @@ const Login: React.FC = () => {
           </div>
           <div className="flex flex-col mb-4">
             <Label className="text-sm font-bold mb-2" htmlFor="password">Password</Label>
-            <Input
+            <input
               type="password"
               id="password"
               placeholder="Password"
@@ -60,7 +60,7 @@ aspect-square w-8 flex justify-center items-center text-yellow-700"></div>: "Log
           </button>
         </form>
         <p className="mt-4 text-sm text-gray-600">
-          Don't have an account? <a href="/" className="text-blue-500 hover:text-blue-700">Register here</a>
+          Don&apos;t have an account? <a href="/" className="text-blue-500 hover:text-blue-700">Register here</a>
         </p>
       </div>
     </div>
