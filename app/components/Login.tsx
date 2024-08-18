@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { account } from "@/lib/appwrite";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 
 
@@ -53,11 +54,11 @@ const Login: React.FC = () => {
               className="p-2 border border-gray-300 rounded-md w-full"
             />
           </div>
-          <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+          <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
             {loading ? 
 <div className="loader mx-auto border-t-2 rounded-full border-gray-500 bg-gray-300 animate-spin
 aspect-square w-8 flex justify-center items-center text-yellow-700"></div>: "Login"} 
-          </button>
+          </Button>
         </form>
         <p className="mt-4 text-sm text-gray-600">
           Don&apos;t have an account? <a href="/" className="text-blue-500 hover:text-blue-700">Register here</a>

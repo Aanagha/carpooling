@@ -1,25 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { account, ID } from "@/lib/appwrite";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false); // State to manage loader visibility
 
   const register = async () => {
+       setLoading(true); // Show loader on register attempt
     try {
       await account.create(ID.unique(), email, password, name);
       await account.createEmailPasswordSession(email, password);
-      router.push("/"); // Redirect to home page after registration
+      window.location.reload(); // Refresh the window after successful login
     } catch (error) {
       console.error("Registration failed:", error);
-    }
+    } finally {
+        setLoading(false); // Hide loader after login attempt
+      }
   };
 
   return (
@@ -63,9 +66,11 @@ const Register: React.FC = () => {
               className="p-2 border border-gray-300 rounded-md w-full"
             />
           </div>
-          <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
-            Register
-          </button>
+          <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+          {loading ? 
+<div className="loader mx-auto border-t-2 rounded-full border-gray-500 bg-gray-300 animate-spin
+aspect-square w-8 flex justify-center items-center text-yellow-700"></div>: "Register"} 
+          </Button>
         </form>
         <p className="mt-4 text-sm text-gray-600">
           Already have an account? <a href="/" className="text-blue-500 hover:text-blue-700">Login here</a>
