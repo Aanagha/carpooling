@@ -49,7 +49,7 @@ export default function Home() {
   return (
     <>
       <header className="text-white p-2 relative overflow-hidden">
-        <div className="z-10 w-full max-w-5xl mx-auto items-center justify-between font-mono text-sm flex flex-col lg:flex-row">
+        <div className="z-10 w-full max-w-5xl mx-auto items-center justify-between font-mono text-sm flex flex-row">
         <div className="flex items-center">
           <Image src="vercel.svg" alt="Logo" width={100} height={1-0} />
         </div>
