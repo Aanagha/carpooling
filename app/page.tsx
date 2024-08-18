@@ -2,8 +2,6 @@
 import Image from "next/image";
 
 import { useEffect, useState } from "react";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { DrawerDemo } from "./components/DrawerDemo";
 
 import RideList from "./components/RidesList";
@@ -17,7 +15,7 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
  const [loading,setLoading] =  useState(false);
   useEffect(() => {
-    AOS.init({ duration: 1000, easing: 'ease-in-out' });
+    // AOS.init({ duration: 1000, easing: 'ease-in-out' });
   }, []);
 
   const [user, setUser] = useState<any>(null);
@@ -97,7 +95,7 @@ aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
             </svg> */}
         <section className="py-12 sm:py-16 md:py-20 w-full">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-16" data-aos="fade-down">How It Works</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-16" >How It Works</h2>
             <div className="space-y-12 sm:space-y-0 sm:flex sm:justify-between p-6 gap-4">
               {[
                 { title: "Offer a Ride", description: "Fill out the ride details and offer your ride to others.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" },
@@ -148,9 +146,9 @@ aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
             </div>
           </div>
         </section>
-        <section id="features" className="py-12 sm:py-16 md:py-20 w-full">
+        {/* <section id="features" className="py-12 sm:py-16 md:py-20 w-full">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12" data-aos="fade-down">Solving Your Ride-Sharing Problems</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12" >Solving Your Ride-Sharing Problems</h2>
             <div className="space-y-8">
               <div className="text-center">
                 <h3 className="text-2xl sm:text-3xl font-semibold mb-4">Problems</h3>
@@ -160,7 +158,7 @@ aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
                     { title: "Lack of Ride Status", description: "When shared, there is no proper status of the ride.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" },
                     { title: "Peak Hour Rush", description: "During peak hours, it gets too rushy to find a ride.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" }
                   ].map((_, index) => (
-                    <li key={index} className="mb-2" data-aos="fade-up" data-aos-delay={index * 100}>
+                    <li key={index} className="mb-2"  >
                      
 <div
   className="w-64 bg-white shadow-[0px_0px_15px_rgba(0,0,0,0.09)] p-9 space-y-3 relative overflow-hidden"
@@ -198,7 +196,7 @@ aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
                     { title: "Organized Rides", description: "Our app organizes rides and maintains proper status and updates.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" },
                     { title: "Easy Ride Tracking", description: "Using our app, users can easily track available rides as per their convenience in time and vehicle.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" }
                   ].map((_, index) => (
-                    <li key={index} className="mb-2" data-aos="fade-up" data-aos-delay={index * 100}>
+                    <li key={index} className="mb-2"  >
                        <svg viewBox="0 0 300 300" width='500' height='500' xmlns="http://www.w3.org/2000/svg">
   <path fill="#FF0066" d="M44.2,-46.9C52.8,-35.5,52.3,-17.8,43.8,-8.6C35.2,0.7,18.6,1.3,10,13C1.3,24.6,0.7,47.2,-2.5,49.7C-5.6,52.2,-11.2,34.5,-20.9,22.9C-30.6,11.2,-44.3,5.6,-52.4,-8.1C-60.5,-21.8,-62.9,-43.6,-53.2,-54.9C-43.6,-66.2,-21.8,-67.1,-2,-65.1C17.8,-63.1,35.5,-58.2,44.2,-46.9Z" transform="translate(100 100)" />
 </svg>
@@ -208,18 +206,18 @@ aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
      
         <section className="py-12 sm:py-16 md:py-20 w-full">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-16" data-aos="fade-down">Best Practices</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-16" >Best Practices</h2>
             <div className="space-y-12 sm:space-y-0 sm:flex sm:justify-between">
               {[
                 { title: "Be Respectful", description: "Treat your fellow riders with respect and kindness.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" },
                 { title: "Communicate Clearly", description: "Keep your fellow riders informed about any changes or updates.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" },
                 { title: "Be Punctual", description: "Arrive on time to ensure a smooth ride for everyone.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" }
               ].map((practice, index) => (
-                <div key={index} className="relative flex flex-col items-center sm:w-1/3" data-aos="fade-up" data-aos-delay={index * 100}>
+                <div key={index} className="relative flex flex-col items-center sm:w-1/3"  >
                   <div className="bg-green-500 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold z-10 mb-4">
                     {index + 1}
                   </div>
