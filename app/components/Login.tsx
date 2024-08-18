@@ -5,6 +5,7 @@ import { useState } from "react";
 import { account } from "@/lib/appwrite";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 
 
@@ -18,8 +19,10 @@ const Login: React.FC = () => {
     try {
       await account.createEmailPasswordSession(email, password);
       window.location.reload(); // Refresh the window after successful login
-    } catch (error) {
+      toast('Logged in successfully');
+    } catch (error:any) {
       console.error("Login failed:", error);
+      toast(error.message);
     } finally {
       setLoading(false); // Hide loader after login attempt
     }

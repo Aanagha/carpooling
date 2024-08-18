@@ -5,6 +5,7 @@ import { account, ID } from "@/lib/appwrite";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -18,8 +19,11 @@ const Register: React.FC = () => {
       await account.create(ID.unique(), email, password, name);
       await account.createEmailPasswordSession(email, password);
       window.location.reload(); // Refresh the window after successful login
-    } catch (error) {
+      toast('Registered in successfully');
+    } catch (error:any) {
       console.error("Registration failed:", error);
+      toast(error.message);
+
     } finally {
         setLoading(false); // Hide loader after login attempt
       }
