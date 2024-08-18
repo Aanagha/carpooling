@@ -1,25 +1,26 @@
 import * as React from "react";
-import { useForm, Controller } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
+
   DrawerTitle,
+
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
 
 export function DrawerDemo({
   bc,
-  children,variant,rideType,title
+  children, variant, rideType, title
 }: {
-  bc:string,children: React.ReactNode,variant:string,rideType:string,title:string
+  bc: string, children: React.ReactNode, variant: string, rideType: string, title: string
 }) {
-  
+
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -31,19 +32,19 @@ export function DrawerDemo({
           {rideType}
         </Button>
       </DrawerTrigger>
-      <DrawerContent>
-      <DrawerHeader>
-      <DrawerTitle className="text-center">{title}</DrawerTitle>
-  
-    </DrawerHeader>
-    {children}
-    <DrawerFooter className="mt-6 flex justify-center">
-        <DrawerClose asChild>
+      <DrawerContent aria-describedby={undefined}>
+        <DrawerHeader>
+          <DrawerTitle className="text-center text-3xl ">{title}</DrawerTitle>
+
+        </DrawerHeader>
+        {children}
+        <DrawerFooter className="mt-6 flex justify-center">
+          <DrawerClose asChild>
             <Button variant="outline" size="lg" className="m-auto">Cancel</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
-     
+
     </Drawer>
   );
 }

@@ -1,24 +1,33 @@
 import { fetchRides } from '@/lib/rides';
 import { useEffect, useState } from 'react';
-import { reserveRide, confirmRide } from '@/lib/rides';
-import { useActiveAccount } from 'thirdweb/react';
+import { reserveRide } from '@/lib/rides';
 import { Button } from '@/components/ui/button';
+import { account } from '@/lib/appwrite';
 const RideList = () => {
     const [rides, setRides] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [message, setMessage] = useState<string | null>(null);
-    const activeWallet = useActiveAccount();
-    const [walletAddress, setWalletAddress] = useState<string | null>(null);
+
   
 
  
-   useEffect(() => {
-        if (activeWallet) {
-          setWalletAddress(activeWallet.address);
-        } else {
-          setWalletAddress(null);
-        }
-      }, [activeWallet]);
+    const [user, setUser] = useState<any>(null);
+
+
+  useEffect(() => {
+    const fetchUser = async () => {
+    
+      try {
+        const userData = await account.get();
+        setUser(userData);
+        console.log(userData);
+      } catch (error) {
+        console.error("User not logged in:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
     useEffect(() => {
         const loadRides = async () => {
             setIsLoading(true);
@@ -35,25 +44,14 @@ const RideList = () => {
 
         loadRides();
     }, []);
-    const handleConfirmRide = async (rideId: string) => {
-        if (!walletAddress) {
-            setMessage('Wallet address is required to confirm ride.');
-            return;
-        }
-        try {
-            const response = await confirmRide(rideId, walletAddress);
-            setMessage('Ride successfully confirmed!');
-        } catch (error:any) {
-            setMessage(`Failed to confirm ride: ${error.message}`);
-        }
-    };
+  
     const handleReserveRide = async (rideId: string) => {
-        if (!walletAddress) {
+        if (!user) {
             setMessage('Wallet address is required to reserve ride.');
             return;
         }
         try {
-            const response = await reserveRide(rideId, walletAddress);
+            await reserveRide(rideId, user.$id);
             setMessage('Ride successfully reserved!');
         } catch (error:any) {
             setMessage(` ${error.message}`);
@@ -92,9 +90,7 @@ const RideList = () => {
                                
                             <Button onClick={() => handleReserveRide(ride.$id)}>Reserve</Button>
                       
-                                 {/* {ride.status === 'reserved' && ride.bookedBy.includes(walletAddress) && (
-                            <Button onClick={() => handleConfirmRide(ride.$id)}>Confirm</Button>
-                        )} */}
+                            
                             </div>
                             {message && <p>{message}</p>}
                         </div>

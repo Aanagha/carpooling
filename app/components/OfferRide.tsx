@@ -1,12 +1,29 @@
 import * as React from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useActiveAccount } from "thirdweb/react";
+
 import { Button } from "@/components/ui/button";
 import { createRide } from '@/lib/rides';
 import { toast } from "sonner";
+import { account } from "@/lib/appwrite";
 
 const OfferRide: React.FC = () => {
+  const [user, setUser] = React.useState<any>(null);
 
+
+  React.useEffect(() => {
+    const fetchUser = async () => {
+ 
+      try {
+        const userData = await account.get();
+        setUser(userData);
+      } catch (error) {
+        console.error("User not logged in:", error);
+       
+      }
+    };
+
+    fetchUser();
+  }, []);
   const { handleSubmit, control } = useForm({
     defaultValues: {
       pickupLocation: "",
@@ -17,17 +34,9 @@ const OfferRide: React.FC = () => {
       vehicleNumber: "",
     },
   });
-  const activeWallet = useActiveAccount();
+
   const [isLoading, setIsLoading] = React.useState(false);
-  const [walletAddress, setWalletAddress] = React.useState<string | null>(null);
   const [message, setMessage] = React.useState<string | null>(null);
-  React.useEffect(() => {
-    if (activeWallet) {
-      setWalletAddress(activeWallet.address);
-    } else {
-      setWalletAddress(null);
-    }
-  }, [activeWallet]);
 
   const onSubmit = async (data: any) => {
     setIsLoading(true);
@@ -35,7 +44,7 @@ const OfferRide: React.FC = () => {
       const rideData = {
         ...data,
         status: "active",
-        offeredBy:walletAddress,
+        offeredBy:user.$id,
         seats: Number(data.seats) // Ensure seats is always a number
       };
       console.log(rideData);

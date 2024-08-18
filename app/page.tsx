@@ -1,38 +1,74 @@
 "use client";
 import Image from "next/image";
-import { ConnectButton } from "thirdweb/react";
-import { client } from "./client";
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { DrawerDemo } from "./components/DrawerDemo";
 
 import RideList from "./components/RidesList";
 import OfferRide from "./components/OfferRide";
+import Register from "./components/Register";
+import Login from "./components/Login";
+import { account } from "@/lib/appwrite";
+import { Button } from "@/components/ui/button";
 
 
 export default function Home() {
- 
+ const [loading,setLoading] =  useState(false);
   useEffect(() => {
     AOS.init({ duration: 1000, easing: 'ease-in-out' });
   }, []);
 
+  const [user, setUser] = useState<any>(null);
 
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      setLoading(true);
+      try {
+        const userData = await account.get();
+        setUser(userData);
+        console.log(userData);
+      } catch (error) {
+        console.error("User not logged in:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+  const logout = async () => {
+    try {
+      await account.deleteSession("current"); // Logout the user
+      setUser(null); // Clear user state
+    
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
   return (
     <>
-      <header className="text-white p-4 relative overflow-hidden">
+      <header className="text-white p-2 relative overflow-hidden">
         <div className="z-10 w-full max-w-5xl mx-auto items-center justify-between font-mono text-sm flex flex-col lg:flex-row">
         
-          <ConnectButton
-              client={client}
-              connectButton={{
-                label: "Sign in",
-              }}
-              connectModal={{
-                title: "Sign in to car pool",
-                size: "compact",
-              }}
-            />
+       <div className="flex flex-row gap-4">
+        {user ? <>
+          <p className="text-black">{user.name}</p>
+          <Button onClick={logout}>Logout</Button>
+        </>: <>
+          {loading ? 
+            
+<div className="loader border-t-2 m-auto rounded-full border-gray-500 bg-gray-300 animate-spin
+aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
+            <DrawerDemo rideType="Sign Up" variant="default" bc="white" children={<Register  />} title="Signup"/>
+          <DrawerDemo rideType="Login" variant="default" bc="white" children={<Login  />} title="Login"/>
+            </>
+          }
+        </>}
+       
+       </div>
         </div>
       </header>
 
@@ -67,9 +103,9 @@ export default function Home() {
                 { title: "Offer a Ride", description: "Fill out the ride details and offer your ride to others.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" },
                 { title: "Join a Ride", description: "Search for available rides and book your seat.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" },
                 { title: "Enjoy the Ride", description: "Meet your driver, hop in, and enjoy your journey.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" }
-              ].map((step, index) => (
+              ].map((_, index) => (
          
-<div
+<div key={index}
   className="group hover:-rotate-0 [transform:rotate3d(1_,-1,_1,_15deg)] duration-500 overflow-hidden bg-white p-6 rounded-lg hover:shadow-lg [box-shadow:12px_12px_0px_0px_#0d0d0d] backdrop-filter backdrop-blur-md border border-neutral-600"
 >
   <div className="flex items-center justify-between">
@@ -85,9 +121,9 @@ export default function Home() {
       <path
         d="M12 3V4M12 20V21M4 12H3M6.31412 6.31412L5.5 5.5M17.6859 6.31412L18.5 5.5M6.31412 17.69L5.5 18.5001M17.6859 17.69L18.5 18.5001M21 12H20M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z"
         stroke=""
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
       ></path>
     </svg>
   </div>
@@ -123,7 +159,7 @@ export default function Home() {
                     { title: "Difficulty in Finding Rides", description: "Students often struggle to find a ride every day.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" },
                     { title: "Lack of Ride Status", description: "When shared, there is no proper status of the ride.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" },
                     { title: "Peak Hour Rush", description: "During peak hours, it gets too rushy to find a ride.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" }
-                  ].map((problem, index) => (
+                  ].map((_, index) => (
                     <li key={index} className="mb-2" data-aos="fade-up" data-aos-delay={index * 100}>
                      
 <div
@@ -161,7 +197,7 @@ export default function Home() {
                   {[
                     { title: "Organized Rides", description: "Our app organizes rides and maintains proper status and updates.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" },
                     { title: "Easy Ride Tracking", description: "Using our app, users can easily track available rides as per their convenience in time and vehicle.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" }
-                  ].map((solution, index) => (
+                  ].map((_, index) => (
                     <li key={index} className="mb-2" data-aos="fade-up" data-aos-delay={index * 100}>
                        <svg viewBox="0 0 300 300" width='500' height='500' xmlns="http://www.w3.org/2000/svg">
   <path fill="#FF0066" d="M44.2,-46.9C52.8,-35.5,52.3,-17.8,43.8,-8.6C35.2,0.7,18.6,1.3,10,13C1.3,24.6,0.7,47.2,-2.5,49.7C-5.6,52.2,-11.2,34.5,-20.9,22.9C-30.6,11.2,-44.3,5.6,-52.4,-8.1C-60.5,-21.8,-62.9,-43.6,-53.2,-54.9C-43.6,-66.2,-21.8,-67.1,-2,-65.1C17.8,-63.1,35.5,-58.2,44.2,-46.9Z" transform="translate(100 100)" />

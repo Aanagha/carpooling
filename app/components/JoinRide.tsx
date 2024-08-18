@@ -1,8 +1,7 @@
 import * as React from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useActiveAccount } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
-import io from "socket.io-client";
+
 
 interface IRide {
   _id: string;
@@ -15,12 +14,12 @@ interface IRide {
   status: string;
 }
 
-const socket = io(); // Connect to Socket.io server
+
 
 const JoinRide: React.FC = () => {
   const [step, setStep] = React.useState(1);
   const [rides, setRides] = React.useState<IRide[]>([]);
-  const [selectedRide, setSelectedRide] = React.useState<string | null>(null);
+
   const [messages, setMessages] = React.useState<string[]>([]);
   const { handleSubmit, control, watch } = useForm({
     defaultValues: {
@@ -29,16 +28,9 @@ const JoinRide: React.FC = () => {
       message: "",
     },
   });
-  const activeWallet = useActiveAccount();
-  const [walletAddress, setWalletAddress] = React.useState<string | null>(null);
 
-  React.useEffect(() => {
-    if (activeWallet) {
-      setWalletAddress(activeWallet.address);
-    } else {
-      setWalletAddress(null);
-    }
-  }, [activeWallet]);
+
+
 
   React.useEffect(() => {
     // Fetch available rides
