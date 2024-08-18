@@ -49,25 +49,16 @@ const RideList = () => {
     const handleReserveRide = async (rideId: string) => {
         if (!user) {
             setMessage('Please login first to  reserve a ride.');
-toast(message,{ action: {
-    label: "Close",
-    onClick: () => console.log("Undo"),
-  },});
+toast.info(message);
             return;
         }
         try {
             await reserveRide(rideId, user.$id);
             setMessage('Ride successfully reserved!');
-            toast(message,{ action: {
-                label: "Close",
-                onClick: () => console.log("Undo"),
-              },});
+            toast.success(message);
         } catch (error:any) {
-            setMessage(` ${error.message}`);
-            toast(message,{ action: {
-                label: "Close",
-                onClick: () => console.log("Undo"),
-              },});
+         console.error(error.message);
+            toast.error(error.message);
         }
     };
     return (

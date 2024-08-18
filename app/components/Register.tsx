@@ -19,16 +19,10 @@ const Register: React.FC = () => {
       await account.create(ID.unique(), email, password, name);
       await account.createEmailPasswordSession(email, password);
       window.location.reload(); // Refresh the window after successful login
-      toast('Registered in successfully',{ action: {
-        label: "Close",
-        onClick: () => console.log("Undo"),
-      },});
+      toast.success('Registered in successfully');
     } catch (error:any) {
       console.error("Registration failed:", error);
-      toast(error.message,{ action: {
-        label: "Close",
-        onClick: () => console.log("Undo"),
-      },});
+      toast.error(error.message);
 
     } finally {
         setLoading(false); // Hide loader after login attempt
