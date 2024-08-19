@@ -1,3 +1,4 @@
+
 import { Client, Account, Databases, ID, Query } from 'appwrite';
 
 // Initialize the Appwrite client
@@ -9,6 +10,7 @@ client
 
 // Initialize the Account service to handle authentication
 const account = new Account(client);
+
 
 // Initialize the Databases service to interact with your database
 const databases = new Databases(client);

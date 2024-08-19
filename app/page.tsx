@@ -1,51 +1,16 @@
 "use client";
 import Image from "next/image";
 
-import { useEffect, useState } from "react";
 import { DrawerDemo } from "./components/DrawerDemo";
 
 import RideList from "./components/RidesList";
 import OfferRide from "./components/OfferRide";
-import Register from "./components/Register";
-import Login from "./components/Login";
-import { account } from "@/lib/appwrite";
-import { Button } from "@/components/ui/button";
+
+import { Profile } from "./components/Profile";
 
 
 export default function Home() {
- const [loading,setLoading] =  useState(false);
-  useEffect(() => {
-    // AOS.init({ duration: 1000, easing: 'ease-in-out' });
-  }, []);
-
-  const [user, setUser] = useState<any>(null);
-
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      setLoading(true);
-      try {
-        const userData = await account.get();
-        setUser(userData);
-        console.log(userData);
-      } catch (error) {
-        console.error("User not logged in:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
-  const logout = async () => {
-    try {
-      await account.deleteSession("current"); // Logout the user
-      setUser(null); // Clear user state
-    
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+ 
   return (
     <>
       <header className="text-white p-2 relative overflow-hidden">
@@ -55,19 +20,7 @@ export default function Home() {
         </div>
        <div className="flex flex-row gap-4">
         
-        {user ? <>
-          <p className="text-black">{user.name}</p>
-          <Button onClick={logout}>Logout</Button>
-        </>: <>
-          {loading ? 
-            
-<div className="loader border-t-2 m-auto rounded-full border-gray-500 bg-gray-300 animate-spin
-aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
-            <DrawerDemo action={false} rideType="Sign Up" variant="default" bc="white" title="Signup"><Register/></DrawerDemo>
-          <DrawerDemo action={false} rideType="Login" variant="default" bc="white"  title="Login"><Login  /></DrawerDemo>
-            </>
-          }
-        </>}
+        <Profile/>
        
        </div>
         </div>

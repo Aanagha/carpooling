@@ -1,6 +1,29 @@
-// lib/rides.ts
 
-import { databases, ID } from './appwrite';
+
+
+import {  databases, ID } from './appwrite';
+
+
+const notifyOfferer = async (message: string, offererId: string) => {
+    try {
+        await databases.createDocument(
+            process.env.NEXT_PUBLIC_DB_ID as string,
+            process.env.NEXT_PUBLIC_NOTIFICATION_COLLECTION_ID as string, // Collection ID for notifications
+            ID.unique(),
+            {
+                userId: offererId,
+                message,
+                timestamp: new Date(),
+                read: false,
+            }
+        );
+    } catch (error) {
+        console.error('Failed to send notification:', error);
+    }
+};
+
+
+
 
 export const createRide = async (rideData: any) => {
     try {
@@ -57,32 +80,13 @@ export const reserveRide = async (rideId: string, walletAddress: string) => {
                 bookedBy: [...ride.bookedBy, walletAddress],
             }
         );
+ // Notify the offerer that a seat has been reserved
+ notifyOfferer('A seat has been reserved on your ride.', ride.offeredBy);
 
-        // Uncomment this section if you want to enable the 5-minute timeout
-        // Set a 5-minute timer to check if the user confirms the ride
-        // setTimeout(async () => {
-        //     const updatedRideCheck = await databases.getDocument(
-        //         process.env.NEXT_PUBLIC_DB_ID as string,
-        //         process.env.NEXT_PUBLIC_COLLECTION_ID as string,
-        //         rideId
-        //     );
-        //     const currentTime = new Date();
-        //     const departureTime = new Date(updatedRideCheck.departureTime);
-
-        //     // If the ride is still reserved and the departure time is near, revert the reservation
-        //     if (updatedRideCheck.status === 'reserved' && currentTime >= departureTime) {
-        //         await databases.updateDocument(
-        //             process.env.NEXT_PUBLIC_DB_ID as string,
-        //             process.env.NEXT_PUBLIC_COLLECTION_ID as string,
-        //             rideId,
-        //             {
-        //                 status: 'active',
-        //                 bookedBy: ride.bookedBy.filter((address: string) => address !== walletAddress), // Remove the unconfirmed reservation
-        //             }
-        //         );
-        //         console.log('Reservation expired, status reverted to active');
-        //     }
-        // }, 5 * 60 * 1000); // 5-minute timeout
+ // If all seats are booked, notify the offerer
+ if (updatedRide.bookedBy.length === ride.seats) {
+     notifyOfferer('All seats on your ride have been booked.', ride.offeredBy);
+ }
 
         console.log(updatedRide);
         return updatedRide;
