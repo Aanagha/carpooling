@@ -7,8 +7,11 @@ const ActiveRides = ({ userId }: { userId: string }) => {
     const [ridesByStatus, setRidesByStatus] = useState<{ [key: string]: any[] }>({});
 
     useEffect(() => {
-        const fetchRides = async () => {
+        const fetchAndUpdateRides = async () => {
             try {
+                const now = new Date();
+
+                // Fetch all rides offered or reserved by the user
                 const offeredRides = await databases.listDocuments(
                     process.env.NEXT_PUBLIC_DB_ID as string,
                     process.env.NEXT_PUBLIC_COLLECTION_ID as string,
@@ -23,8 +26,23 @@ const ActiveRides = ({ userId }: { userId: string }) => {
 
                 const allRides = [...offeredRides.documents, ...reservedRides.documents];
 
+                // Update status to 'completed' if departure time has passed
+                const updatedRides = await Promise.all(allRides.map(async (ride) => {
+                    const departureTime = new Date(ride.departureTime);
+                    if (departureTime <= now && ride.status !== 'completed') {
+                        await databases.updateDocument(
+                            process.env.NEXT_PUBLIC_DB_ID as string,
+                            process.env.NEXT_PUBLIC_COLLECTION_ID as string,
+                            ride.$id,
+                            { status: 'completed' }
+                        );
+                        ride.status = 'completed'; // Update the status locally
+                    }
+                    return ride;
+                }));
+
                 // Categorize rides by their status
-                const categorizedRides = allRides.reduce((acc: { [key: string]: any[] }, ride: any) => {
+                const categorizedRides = updatedRides.reduce((acc: { [key: string]: any[] }, ride: any) => {
                     const status = ride.status || 'unknown';
                     if (!acc[status]) {
                         acc[status] = [];
@@ -35,11 +53,16 @@ const ActiveRides = ({ userId }: { userId: string }) => {
 
                 setRidesByStatus(categorizedRides);
             } catch (error) {
-                console.error('Failed to fetch rides:', error);
+                console.error('Failed to fetch or update rides:', error);
             }
         };
 
-        fetchRides();
+        fetchAndUpdateRides();
+
+        // Optional: Set an interval to refresh every minute or so
+        const interval = setInterval(fetchAndUpdateRides, 60000); // 60 seconds
+        return () => clearInterval(interval);
+
     }, [userId]);
 
     return (
