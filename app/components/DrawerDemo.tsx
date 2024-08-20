@@ -38,11 +38,7 @@ export function DrawerDemo({
 
         </DrawerHeader>
         {children}
-        <DrawerFooter className="mt-6 flex justify-center">
-          <DrawerClose asChild>
-            <Button variant="outline" size="lg" className="m-auto">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
+       
       </DrawerContent>
 
     </Drawer>
