@@ -1,29 +1,30 @@
 import * as React from "react";
 import { useForm, Controller } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
 import { createRide } from '@/lib/rides';
 import { toast } from "sonner";
 import { account } from "@/lib/appwrite";
+import { RideSelect } from "./RideSelect";
 
 const OfferRide: React.FC = () => {
   const [user, setUser] = React.useState<any>(null);
-
+  const [pickupOptions, setPickupOptions] = React.useState<string[]>([]);
 
   React.useEffect(() => {
     const fetchUser = async () => {
- 
       try {
         const userData = await account.get();
         setUser(userData);
+        const options = ["demoOption1", "demoOption2", "demoOption3"];
+        setPickupOptions(options);
       } catch (error) {
         console.error("User not logged in:", error);
-       
       }
     };
 
     fetchUser();
   }, []);
+
   const { handleSubmit, control } = useForm({
     defaultValues: {
       pickupLocation: "",
@@ -31,7 +32,6 @@ const OfferRide: React.FC = () => {
       departureTime: "",
       seats: 1,
       vehicleType: "",
-      vehicleNumber: "",
     },
   });
 
@@ -44,8 +44,8 @@ const OfferRide: React.FC = () => {
       const rideData = {
         ...data,
         status: "active",
-        offeredBy:user.$id,
-        seats: Number(data.seats) // Ensure seats is always a number
+        offeredBy: user.$id,
+        seats: Number(data.seats)
       };
       console.log(rideData);
       await createRide(rideData);
@@ -61,7 +61,7 @@ const OfferRide: React.FC = () => {
 
   if(isLoading){
     return (
-      <div className="loader">
+      <div className="flex flex-col items-center justify-center h-full">
         <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -70,119 +70,111 @@ const OfferRide: React.FC = () => {
       </div>
     );
   }
+
   return (
-    <div className="mx-auto w-full max-w-lg">
+    <div className="mx-auto w-full max-w-lg px-4 sm:px-6 lg:px-8">
       <div className="p-4 pb-0">
-        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4">
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Pickup Location</label>
-                <Controller
-                  name="pickupLocation"
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      type="text"
-                      {...field}
-                      className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Enter pickup location"
-                      required
-                    />
-                  )}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Drop-off Location</label>
-                <Controller
-                  name="dropoffLocation"
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      type="text"
-                      {...field}
-                      className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Enter drop-off location"
-                      required
-                    />
-                  )}
-                />
-              </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-6">
+            <div className="p-6 border-2 border-gray-200 shadow-lg rounded-lg">
+              <ol className="relative border-l border-gray-200 dark:border-gray-700">
+                <li className="mb-10 ml-4">
+                  <span className="absolute flex mt-1.5 items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
+                    <div className="p-1 bg-blue-600 rounded-full"></div>
+                  </span>
+                  <RideSelect displaytext="Select pickup location..." />
+                </li>
+                <li className="ml-4">
+                  <span className="absolute flex mt-1.5 items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
+                    <div className="p-1 bg-blue-600 rounded-full"></div>
+                  </span>
+                  <RideSelect displaytext="Select drop location..." />
+                </li>
+              </ol>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Departure Time</label>
-                <Controller
-                  name="departureTime"
-                  control={control}
-                  render={({ field }) => (
+
+            <div>
+              <label htmlFor="departureTime" className="block text-sm mb-2 font-medium text-gray-700">Departure Time</label>
+              <Controller
+                name="departureTime"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex items-center">
                     <input
-                      type="datetime-local"
+                      id="departureTime"
+                      type="time"
                       {...field}
-                      className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                       required
                     />
-                  )}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Number of Seats</label>
-                <Controller
-                  name="seats"
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      type="number"
-                      {...field}
-                      className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                      min={1}
-                      max={8}
-                      required
-                      value={field.value ? Number(field.value) : ''}
-                    />
-                  )}
-                />
-              </div>
+                  </div>
+                )}
+              />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Vehicle Type</label>
-                <Controller
-                  name="vehicleType"
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      type="text"
-                      {...field}
-                      className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Enter vehicle type"
-                      required
-                    />
-                  )}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Vehicle Number</label>
-                <Controller
-                  name="vehicleNumber"
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      type="text"
-                      {...field}
-                      className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                      maxLength={8}
-                      placeholder="Enter vehicle number"
-                      required
-                    />
-                  )}
-                />
-              </div>
+
+            <div>
+              <label className="block text-sm mb-2 font-medium text-gray-700">Number of Seats</label>
+              <Controller
+                name="seats"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex flex-row space-x-4">
+                    {[1, 2, 3].map((seat) => (
+                      <label key={seat} className="inline-flex items-center space-x-2 bg-white rounded-md p-4 border border-gray-300 shadow-sm cursor-pointer hover:border-blue-500 w-1/3 text-center">
+                        <input
+                          {...field}
+                          type="radio"
+                          name="seats"
+                          value={seat}
+                          className="form-radio"
+                          required
+                        />
+                        <span className="text-lg font-medium">{seat}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm mb-2 font-medium text-gray-700">Vehicle Type</label>
+              <Controller
+                name="vehicleType"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex flex-row space-x-4">
+                    <label className="inline-flex items-center space-x-2 bg-white rounded-md p-4 border border-gray-300 shadow-sm cursor-pointer hover:border-blue-500 w-1/2 text-center">
+                      <input
+                        {...field}
+                        type="radio"
+                        name="vehicleType"
+                        value="car"
+                        className="form-radio"
+                        required
+                      />
+                      <span className="text-lg font-medium">Auto</span>
+                    </label>
+                    <label className="inline-flex items-center space-x-2 bg-white rounded-md p-4 border border-gray-300 shadow-sm cursor-pointer hover:border-blue-500 w-1/2 text-center">
+                      <input
+                        {...field}
+                        type="radio"
+                        name="vehicleType"
+                        value="bus"
+                        className="form-radio"
+                        required
+                      />
+                      <span className="text-lg font-medium">Cab</span>
+                    </label>
+                  </div>
+                )}
+              />
             </div>
           </div>
-          <Button type="submit" className="mt-4 w-50">
-            Offer Ride
-          </Button>
+
+          <Button type="submit" className="mt-4 w-full">
+              Offer Ride
+            </Button>
         </form>
       </div>
     </div>
