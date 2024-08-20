@@ -1,8 +1,4 @@
-
-
-
 import {  databases, ID } from './appwrite';
-
 
 const notifyOfferer = async (message: string, offererId: string) => {
     try {
@@ -21,9 +17,6 @@ const notifyOfferer = async (message: string, offererId: string) => {
         console.error('Failed to send notification:', error);
     }
 };
-
-
-
 
 export const createRide = async (rideData: any) => {
     try {
@@ -46,7 +39,7 @@ export const createRide = async (rideData: any) => {
 export const fetchRides = async () => {
     return databases.listDocuments(process.env.NEXT_PUBLIC_DB_ID as string, process.env.NEXT_PUBLIC_COLLECTION_ID as string);
 };
-export const reserveRide = async (rideId: string, walletAddress: string) => {
+export const reserveRide = async (rideId: string, walletAddress: string, seats: number) => {
     try {
         // Fetch the current ride document
         const ride = await databases.getDocument(
@@ -70,7 +63,7 @@ export const reserveRide = async (rideId: string, walletAddress: string) => {
             throw new Error('No seats available');
         }
 
-        // Update the ride status to 'reserved' and add the wallet address
+        // Update the ride status to 'reserved' and subtract the reserved seats from the total seats
         const updatedRide = await databases.updateDocument(
             process.env.NEXT_PUBLIC_DB_ID as string,
             process.env.NEXT_PUBLIC_COLLECTION_ID as string,
@@ -78,15 +71,17 @@ export const reserveRide = async (rideId: string, walletAddress: string) => {
             {
                 status: 'reserved',
                 bookedBy: [...ride.bookedBy, walletAddress],
+                seats: ride.seats - seats
             }
         );
- // Notify the offerer that a seat has been reserved
- notifyOfferer('A seat has been reserved on your ride.', ride.offeredBy);
 
- // If all seats are booked, notify the offerer
- if (updatedRide.bookedBy.length === ride.seats) {
-     notifyOfferer('All seats on your ride have been booked.', ride.offeredBy);
- }
+        // Notify the offerer that a seat has been reserved
+        notifyOfferer('A seat has been reserved on your ride.', ride.offeredBy);
+
+        // If all seats are booked, notify the offerer
+        if (updatedRide.bookedBy.length === ride.seats) {
+            notifyOfferer('All seats on your ride have been booked.', ride.offeredBy);
+        }
 
         console.log(updatedRide);
         return updatedRide;
@@ -94,22 +89,3 @@ export const reserveRide = async (rideId: string, walletAddress: string) => {
         throw new Error(`Failed to reserve ride: ${error.message}`);
     }
 };
-
-
-// export const confirmRide = async (rideId: string, walletAddress: string) => {
-//     try {
-//         const ride = await databases.getDocument('your_database_id', 'correct_collection_id', rideId);
-
-//         if (ride.status === 'reserved' && ride.bookedBy.includes(walletAddress)) {
-//             // Update the ride status to 'confirmed'
-//             const updatedRide = await databases.updateDocument('your_database_id', 'correct_collection_id', rideId, {
-//                 status: 'confirmed',
-//             });
-//             return updatedRide;
-//         } else {
-//             throw new Error('Ride cannot be confirmed or you did not reserve it');
-//         }
-//     } catch (error: any) {
-//         throw new Error(`Failed to confirm ride: ${error.message}`);
-//     }
-// };

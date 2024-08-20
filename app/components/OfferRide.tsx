@@ -9,6 +9,8 @@ import { RideSelect } from "./RideSelect";
 const OfferRide: React.FC = () => {
   const [user, setUser] = React.useState<any>(null);
   const [pickupOptions, setPickupOptions] = React.useState<string[]>([]);
+  const [pickupLocation, setPickupLocation] = React.useState<string>('');
+  const [dropoffLocation, setDropoffLocation] = React.useState<string>('');
 
   React.useEffect(() => {
     const fetchUser = async () => {
@@ -45,7 +47,9 @@ const OfferRide: React.FC = () => {
         ...data,
         status: "active",
         offeredBy: user.$id,
-        seats: Number(data.seats)
+        seats: Number(data.seats),
+        pickupLocation: pickupLocation,
+        dropoffLocation: dropoffLocation,
       };
       console.log(rideData);
       await createRide(rideData);
@@ -82,13 +86,13 @@ const OfferRide: React.FC = () => {
                   <span className="absolute flex mt-1.5 items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
                     <div className="p-1 bg-blue-600 rounded-full"></div>
                   </span>
-                  <RideSelect displaytext="Select pickup location..." />
+                  <RideSelect displaytext="Select pickup location..." location={pickupLocation} onLocationChange={(location) => setPickupLocation(location)} />
                 </li>
                 <li className="ml-4">
                   <span className="absolute flex mt-1.5 items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
                     <div className="p-1 bg-blue-600 rounded-full"></div>
                   </span>
-                  <RideSelect displaytext="Select drop location..." />
+                  <RideSelect displaytext="Select drop location..." location={dropoffLocation} onLocationChange={(location) => setDropoffLocation(location)} />
                 </li>
               </ol>
             </div>

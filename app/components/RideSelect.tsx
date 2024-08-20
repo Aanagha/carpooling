@@ -42,9 +42,9 @@ const frameworks = [
   },
 ]
 
-export function RideSelect({displaytext}: {displaytext: string}) {
+export function RideSelect({displaytext, location, onLocationChange}: {displaytext: string, location: string, onLocationChange: (location: string) => void}) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+  const [value, setValue] = React.useState(location)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -73,6 +73,7 @@ export function RideSelect({displaytext}: {displaytext: string}) {
                   value={framework.value}
                   onSelect={(currentValue:any) => {
                     setValue(currentValue === value ? "" : currentValue)
+                    onLocationChange(currentValue === value ? "" : currentValue)
                     setOpen(false)
                   }}
                 >
