@@ -13,7 +13,6 @@ import {
     DropdownMenuLabel,
 
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
   
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
@@ -49,7 +48,7 @@ import { DrawerDemo } from "./DrawerDemo";
     try {
       await account.deleteSession("current"); // Logout the user
       setUser(null); // Clear user state
-    
+    window.location.reload();
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -81,14 +80,12 @@ import { DrawerDemo } from "./DrawerDemo";
             <DropdownMenuItem onClick={() => window.location.href = '/profile'}>
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
             </DropdownMenuItem>
        </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <LogOut className="mr-2 h-4 w-4" />
             <Button variant='link' onClick={logout}>Logout</Button>
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -7,10 +7,39 @@ import RideList from "./components/RidesList";
 import OfferRide from "./components/OfferRide";
 
 import { Profile } from "./components/Profile";
+import ActiveRides from "./components/ActiveRides";
+import { useEffect, useState } from "react";
+import { account } from "@/lib/appwrite";
+import { Loader } from "lucide-react";
 
 
 export default function Home() {
- 
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const fetchUser = async () => {
+      setLoading(true);
+      try {
+        const userData = await account.get();
+        setUser(userData);
+        console.log(userData);
+      } catch (error) {
+        console.error("User not logged in:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  if(loading){
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader size={40} />
+      </div>
+    )
+  }
   return (
     <>
       <header className="text-white p-2 relative overflow-hidden">
@@ -30,7 +59,7 @@ export default function Home() {
         <div className="h-full w-full dark:bg-background bg-white dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center">
           <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_95%,black)]"></div>
       
-          <section className="text-center flex flex-col items-center h-[80dvh] lg:justify-center py-10">
+         {!user ?  <section className="text-center flex flex-col items-center h-[80dvh] lg:justify-center py-10">
             <blockquote className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 text-shadow">Ride Together, Save Together!</blockquote>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 text-shadow">Discover the convenience of carpooling, reduce fuel costs, and enhance your  experience.</p>
             <div className="flex flex-row justify-center items-center gap-6">
@@ -38,17 +67,9 @@ export default function Home() {
               <DrawerDemo action rideType="join ride" variant="outline" bc="black"  title="Join a Ride"><RideList  /></DrawerDemo>
             </div>
            
-          </section>
+          </section> : <ActiveRides  userId={user?.$id} /> }
         </div>
-        {/* <svg id="wave" style={{ transform: "rotate(0deg)", transition: "0.3s" }} viewBox="0 0 1440 360" version="1.1" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="sw-gradient-0" x1="0" x2="0" y1="1" y2="0">
-                  <stop stop-color="rgba(2.633, 0.851, 0.278, 1)" offset="0%" />
-                  <stop stop-color="rgba(0, 0, 0, 1)" offset="100%" />
-                </linearGradient>
-              </defs>
-              <path style={{ transform: "translate(0, 0px)", opacity: 1 }} fill="url(#sw-gradient-0)" d="M0,36L40,48C80,60,160,84,240,96C320,108,400,108,480,120C560,132,640,156,720,162C800,168,880,156,960,150C1040,144,1120,144,1200,156C1280,168,1360,192,1440,192C1520,192,1600,168,1680,180C1760,192,1840,240,1920,246C2000,252,2080,216,2160,168C2240,120,2320,60,2400,72C2480,84,2560,168,2640,180C2720,192,2800,132,2880,120C2960,108,3040,144,3120,138C3200,132,3280,84,3360,78C3440,72,3520,108,3600,138C3680,168,3760,192,3840,222C3920,252,4000,288,4080,282C4160,276,4240,228,4320,186C4400,144,4480,108,4560,78C4640,48,4720,24,4800,18C4880,12,4960,24,5040,72C5120,120,5200,204,5280,228C5360,252,5440,216,5520,186C5600,156,5680,132,5720,120L5760,108L5760,360L5720,360C5680,360,5600,360,5520,360C5440,360,5360,360,5280,360C5200,360,5120,360,5040,360C4960,360,4880,360,4800,360C4720,360,4640,360,4560,360C4480,360,4400,360,4320,360C4240,360,4160,360,4080,360C4000,360,3920,360,3840,360C3760,360,3680,360,3600,360C3520,360,3440,360,3360,360C3280,360,3200,360,3120,360C3040,360,2960,360,2880,360C2800,360,2720,360,2640,360C2560,360,2480,360,2400,360C2320,360,2240,360,2160,360C2080,360,2000,360,1920,360C1840,360,1760,360,1680,360C1600,360,1520,360,1440,360C1360,360,1280,360,1200,360C1120,360,1040,360,960,360C880,360,800,360,720,360C640,360,560,360,480,360C400,360,320,360,240,360C160,360,80,360,40,360L0,360Z" />
-            </svg> */}
+    
         <section className="py-12 sm:py-16 md:py-20 w-full">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-16" >How It Works</h2>

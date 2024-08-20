@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { databases, Query } from '@/lib/appwrite';
 
 const ActiveRides = ({ userId }: { userId: string }) => {
-    const [ridesByStatus, setRidesByStatus] = useState<{ [key: string]: any[] }>({});
+    const [activeRides, setActiveRides] = useState<any[]>([]);
 
     useEffect(() => {
         const fetchAndUpdateRides = async () => {
@@ -41,17 +41,10 @@ const ActiveRides = ({ userId }: { userId: string }) => {
                     return ride;
                 }));
 
-                // Categorize rides by their status
-                const categorizedRides = updatedRides.reduce((acc: { [key: string]: any[] }, ride: any) => {
-                    const status = ride.status || 'unknown';
-                    if (!acc[status]) {
-                        acc[status] = [];
-                    }
-                    acc[status].push(ride);
-                    return acc;
-                }, {});
+                // Filter out active rides
+                const activeRides = updatedRides.filter((ride) => ride.status === 'active');
 
-                setRidesByStatus(categorizedRides);
+                setActiveRides(activeRides);
             } catch (error) {
                 console.error('Failed to fetch or update rides:', error);
             }
@@ -67,18 +60,13 @@ const ActiveRides = ({ userId }: { userId: string }) => {
 
     return (
         <div className="p-4 border rounded shadow-sm">
-            <h2 className="text-xl font-semibold mb-2">Your Rides</h2>
-            {Object.keys(ridesByStatus).length > 0 ? (
-                Object.keys(ridesByStatus).map((status) => (
-                    <div key={status} className="mb-6">
-                        <h3 className="text-lg font-semibold mb-2 capitalize">{status} Rides</h3>
-                        {ridesByStatus[status].map((ride) => (
-                            <div key={ride.$id} className="mb-4 p-2 border rounded">
-                                <h4 className="font-bold">{ride.pickupLocation} to {ride.dropoffLocation}</h4>
-                                <p><strong>Departure:</strong> {new Date(ride.departureTime).toLocaleString()}</p>
-                                <p><strong>Status:</strong> {ride.status}</p>
-                            </div>
-                        ))}
+           
+            {activeRides.length > 0 ? (
+                activeRides.map((ride) => (
+                    <div key={ride.$id} className="mb-4 p-2 border rounded">
+                        <h4 className="font-bold">{ride.pickupLocation} to {ride.dropoffLocation}</h4>
+                        <p><strong>Departure:</strong> {new Date(ride.departureTime).toLocaleString()}</p>
+                        <p><strong>Status:</strong> {ride.status}</p>
                     </div>
                 ))
             ) : (

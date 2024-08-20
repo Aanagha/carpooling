@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import Notifications from '../components/Notifications';
 import ActiveRides from '../components/ActiveRides';
 import UserInfo from '../components/UserInfo';
+import RideStatus from '../components/RideStatus';
 
 const ProfilePage = () => {
   const [user, setUser] = useState<any>(null);
@@ -66,7 +67,7 @@ const ProfilePage = () => {
       )}
       <Notifications userId={user?.$id} />
       <ActiveRides  userId={user?.$id} />
-
+{/* <RideStatus status={user.status} departureTime={user.departureTime}/> */}
     </div>
   );
 };
