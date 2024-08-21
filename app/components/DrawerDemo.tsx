@@ -67,7 +67,7 @@ export function DrawerDemo({
             {rideType}
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] backdrop-blur-3xl bg-white/80">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>
@@ -93,7 +93,7 @@ export function DrawerDemo({
           {rideType}
         </Button>
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className="backdrop-blur-3xl bg-white/10">
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription>
