@@ -153,7 +153,7 @@ const OfferRide: React.FC = () => {
                         {...field}
                         type="radio"
                         name="vehicleType"
-                        value="car"
+                        value="Auto"
                         className="form-radio"
                         required
                       />
@@ -164,7 +164,7 @@ const OfferRide: React.FC = () => {
                         {...field}
                         type="radio"
                         name="vehicleType"
-                        value="bus"
+                        value="cab"
                         className="form-radio"
                         required
                       />

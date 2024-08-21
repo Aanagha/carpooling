@@ -70,9 +70,7 @@ export function DrawerDemo({
         <DialogContent className="sm:max-w-[425px] backdrop-blur-3xl bg-white/80">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save when you're done.
-            </DialogDescription>
+           
           </DialogHeader>
           {children}
         </DialogContent>
@@ -96,9 +94,7 @@ export function DrawerDemo({
       <DrawerContent className="backdrop-blur-3xl bg-white/10">
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>
-          <DrawerDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DrawerDescription>
+         
         </DrawerHeader>
         {children}
         <DrawerFooter className="pt-2">
