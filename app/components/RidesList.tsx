@@ -5,6 +5,9 @@ import { Button } from '@/components/ui/button';
 import { account } from '@/lib/appwrite';
 import { toast } from 'sonner';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Terminal } from 'lucide-react';
+
 
 const RideList = () => {
   const [rides, setRides] = useState<any[]>([]);
@@ -74,21 +77,21 @@ const RideList = () => {
        
        {rides.filter((ride) => ride.status === 'active').length > 0 ? (
             rides.filter((ride) => ride.status === 'active').map((ride) => (
-              <div key={ride.$id} className=" rounded-lg overflow-hidden border-2 bg-white transition-transform transform hover:scale-105">
+              <div key={ride.$id} className=" rounded-lg overflow-hidden  bg-white/20 blur-background border-0 transition-transform transform hover:scale-105">
                 <div className="px-6 py-4">
                   <div className="flex flex-row justify-between">
-                    <h3 className="font-bold text-xl mb-2 text-gray-800">
+                    <h2 className="font-bold text-2xl mb-2 text-gray-300">
                       {ride.pickupLocation} to {ride.dropoffLocation}
-                    </h3>
-                    <span className={`inline-block bg-${ride.status === 'active' ? 'green' : 'red'}-500 text-white text-xs leading-5 font-semibold rounded-lg p-1.5`}>
+                    </h2>
+                    <span className={`inline-block bg-${ride.status === 'active' ? 'green' : 'red'}-500 text-white text-xs leading-6 font-semibold rounded-full p-2`}>
                       {ride.status}
                     </span>
                   </div>
-                  <p className="text-gray-600">
+                  <p className="text-background">
                     Departure: {new Date(ride.departureTime).toLocaleString()}
                   </p>
-                  <p className="text-gray-600">Vehicle: {ride.vehicleType}</p>
-                  <p className="text-gray-600">Seats Available: {ride.seats}</p>
+                  <p className="text-background">Vehicle: {ride.vehicleType}</p>
+                  <p className="text-background">Seats Available: {ride.seats}</p>
                 </div>
 
                 <div className="px-6 py-4 flex flex-wrap items-center justify-center">
@@ -120,18 +123,19 @@ const RideList = () => {
               </div>
             ))
           ) : (
-            <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white m-4">
-              <div className="px-2 py-4">
-                <p className="text-gray-700 text-base">
-                  No rides available now.
-                </p>
-              </div>
-            </div>
+            <Alert>
+            <Terminal className="h-4 w-4" />
+            
+            <AlertDescription className='mb-4'>
+             No rides available for now. Make a new ride
+            </AlertDescription>
+
+          </Alert>
           )}
            
   
         </div>
-        <ScrollBar orientation="horizontal" />
+        <ScrollBar orientation="horizontal" className='lg:visible hidden' />
         </ScrollArea>
       )}
     </div>

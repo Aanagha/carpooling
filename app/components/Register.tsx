@@ -43,7 +43,7 @@ const Register: React.FC = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="p-2 border border-gray-300 rounded-md w-full"
+              className="p-2 border border-gray-800 rounded-md w-full"
             />
           </div>
           <div className="flex flex-col mb-4">
@@ -55,7 +55,7 @@ const Register: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="p-2 border border-gray-300 rounded-md w-full"
+              className="p-2 border border-gray-800 rounded-md w-full"
             />
           </div>
           <div className="flex flex-col mb-4">
@@ -67,10 +67,10 @@ const Register: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="p-2 border border-gray-300 rounded-md w-full"
+              className="p-2 border border-gray-800 rounded-md w-full"
             />
           </div>
-          <Button type="submit" className=" hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+          <Button type="submit" variant={'outline'} className=" hover:bg-blue-700 font-bold py-2 px-4 rounded w-full">
           {loading ? 
 <div className="loader mx-auto border-t-2 rounded-full border-gray-500 bg-gray-300 animate-spin
 aspect-square w-8 flex justify-center items-center text-yellow-700"></div>: "Register"} 

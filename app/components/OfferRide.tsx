@@ -76,12 +76,12 @@ const OfferRide: React.FC = () => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-lg px-4 sm:px-2 lg:px-2 lg:text-background">
+    <div className="mx-auto w-full max-w-lg px-4 sm:px-2 lg:px-2 ">
       <div className="p-4 pb-0">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-6">
-            <div className="p-8 border-2 border-gray-600 shadow-2xl rounded-lg">
-              <ol className="relative border-l border-gray-600 dark:border-gray-700">
+            <div className="p-8 border-2 border-gray-300 shadow-2xl rounded-lg">
+              <ol className="relative border-l border-gray-300 dark:border-gray-700">
                 <li className="mb-10 ml-4">
                   <span className="absolute flex mt-1.5 items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
                     <div className="p-1 bg-blue-600 rounded-full"></div>
@@ -98,7 +98,7 @@ const OfferRide: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="departureTime" className="block text-sm mb-2 font-medium text-gray-700">Departure Time</label>
+              <label htmlFor="departureTime" className="block text-base mb-2 font-medium">Departure Time</label>
               <Controller
                 name="departureTime"
                 control={control}
@@ -108,7 +108,7 @@ const OfferRide: React.FC = () => {
                       id="departureTime"
                       type="time"
                       {...field}
-                      className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full p-2 border text-background border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                       required
                     />
                   </div>
@@ -117,23 +117,23 @@ const OfferRide: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm mb-2 font-medium text-gray-700">Number of Seats</label>
+              <label className="block text-base mb-2 font-medium ">Number of Seats</label>
               <Controller
                 name="seats"
                 control={control}
                 render={({ field }) => (
-                  <div className="flex flex-row space-x-4">
+                  <div className="flex flex-row space-x-8">
                     {[1, 2, 3].map((seat) => (
-                      <label key={seat} className="inline-flex items-center space-x-2 bg-white rounded-md p-4 border border-gray-300 shadow-sm cursor-pointer hover:border-blue-500 w-1/3 text-center">
+                      <label key={seat} className="inline-flex items-center space-x-4   blur-background bg-white/10 rounded-md p-2 border border-gray-300 shadow-sm cursor-pointer hover:border-blue-500 w-1/3 text-center">
                         <input
                           {...field}
                           type="radio"
                           name="seats"
                           value={seat}
-                          className="form-radio"
+                          className="form-radio text accent-ring "
                           required
                         />
-                        <span className="text-lg font-medium">{seat}</span>
+                        <span className="text-md font-medium text-background">{seat}</span>
                       </label>
                     ))}
                   </div>
@@ -142,30 +142,30 @@ const OfferRide: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm mb-2 font-medium text-gray-700">Vehicle Type</label>
+              <label className="block text-base mb-2 font-medium ">Vehicle Type</label>
               <Controller
                 name="vehicleType"
                 control={control}
                 render={({ field }) => (
                   <div className="flex flex-row space-x-4">
-                    <label className="inline-flex items-center space-x-2 bg-white rounded-md p-4 border border-gray-300 shadow-sm cursor-pointer hover:border-blue-500 w-1/2 text-center">
+                    <label className="inline-flex items-center text-background space-x-6 bg-white rounded-md p-4 border border-gray-300 shadow-sm cursor-pointer hover:border-blue-500 w-1/2 text-center">
                       <input
                         {...field}
                         type="radio"
                         name="vehicleType"
                         value="Auto"
-                        className="form-radio"
+                        className="form-radio accent-black"
                         required
                       />
                       <span className="text-lg font-medium">Auto</span>
                     </label>
-                    <label className="inline-flex items-center space-x-2 bg-white rounded-md p-4 border border-gray-300 shadow-sm cursor-pointer hover:border-blue-500 w-1/2 text-center">
+                    <label className="inline-flex items-center text-background space-x-6 bg-white rounded-md p-4 border border-gray-300 shadow-sm cursor-pointer hover:border-blue-500 w-1/2 text-center">
                       <input
                         {...field}
                         type="radio"
                         name="vehicleType"
                         value="cab"
-                        className="form-radio"
+                        className="form-radio accent-black "
                         required
                       />
                       <span className="text-lg font-medium">Cab</span>
@@ -176,7 +176,7 @@ const OfferRide: React.FC = () => {
             </div>
           </div>
 
-          <Button type="submit" className="mt-4 w-full">
+          <Button type="submit" variant={'outline'} className="mt-4 w-full bg-primary text-background">
               Offer Ride
             </Button>
         </form>

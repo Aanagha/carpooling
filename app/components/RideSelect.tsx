@@ -61,14 +61,14 @@ export function RideSelect({displaytext, location, onLocationChange}: {displayte
           <ChevronsUpDown className=" h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0">
+      <PopoverContent className="w-50 p-0 text-background bg-white mt-[-50px] ml-10">
         <Command >
-          <CommandInput placeholder="Search location..." />
+          <CommandInput className="bg-transparent" placeholder="Search location..." />
           <CommandList>
             <CommandEmpty>No framework found.</CommandEmpty>
             <CommandGroup>
               {frameworks.map((framework) => (
-                <CommandItem
+                <CommandItem className="text-background"
                   key={framework.value}
                   value={framework.value}
                   onSelect={(currentValue:any) => {

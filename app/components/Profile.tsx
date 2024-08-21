@@ -59,10 +59,10 @@ import { DrawerDemo } from "./DrawerDemo";
  {loading ? 
             
             <div className="loader border-t-2 m-auto rounded-full border-gray-500 bg-gray-300 animate-spin
-            aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
-                        <DrawerDemo action={false} rideType="Sign Up" variant="link" bc="transparent" title="Signup"><Register/></DrawerDemo>
-                      <DrawerDemo action={false} rideType="Login" variant="link" bc="transparent"  title="Login"><Login  /></DrawerDemo>
-                        </>
+            aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <div className="flex flex-row gap-0">
+                                     <DrawerDemo  action={false} rideType="Signup" variant="default" bc="transparent"  title="Sign up"><Register/></DrawerDemo>
+                                     <DrawerDemo  action={false} rideType="Login" variant="default" bc="transparent"  title="Login"><Login  /></DrawerDemo>
+                        </div>
                       }
  </>
   }

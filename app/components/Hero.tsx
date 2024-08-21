@@ -71,8 +71,8 @@ const Hero = () => {
                         Discover the convenience of carpooling, reduce fuel costs, and enhance your experience.
                     </p>
                     <div className="flex flex-row justify-center items-center gap-6">
-              <DrawerDemo action rideType="Offer ride" variant="default" bc="white"  title="Offer a Ride"><OfferRide/></DrawerDemo>
-              <DrawerDemo action rideType="join ride" variant="outline" bc="black"  title="Join a Ride"><RideList  /></DrawerDemo>
+              <DrawerDemo  action rideType="Offer ride" variant="default" bc="white"  title="Offer a Ride"><OfferRide/></DrawerDemo>
+              <DrawerDemo  action rideType="join ride" variant="outline" bc="black"  title="Join a Ride"><RideList  /></DrawerDemo>
             </div>
                 </section>
             )}

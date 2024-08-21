@@ -58,7 +58,7 @@ export function DrawerDemo({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button
-            className={`m-auto border-t-4 border-${bc} ${
+            className={`m-auto text-black dark:text-white border-t-4 border-${bc} ${
               action ? "rounded-tl-full rounded-br-full" : ""
             }`}
             variant={variant as any}
@@ -67,9 +67,9 @@ export function DrawerDemo({
             {rideType}
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px] backdrop-blur-3xl bg-white/60">
+        <DialogContent className="sm:max-w-[425px]  backdrop-blur-2xl bg-white/20">
           <DialogHeader>
-            <DialogTitle className="text-background">{title}</DialogTitle>
+            <DialogTitle >{title}</DialogTitle>
            
           </DialogHeader>
           {children}
@@ -82,18 +82,18 @@ export function DrawerDemo({
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button
-          className={`m-auto border-t-4 border-${bc} ${
+          className={`m-auto border-t-4 text-black dark:text-white border-${bc} ${
             action ? "rounded-tl-full rounded-br-full" : ""
           }`}
           variant={variant as any}
-          size="lg"
+          size={'lg'}
         >
           {rideType}
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="backdrop-blur-3xl bg-white/40">
+      <DrawerContent className="backdrop-blur-2xl bg-white/30">
         <DrawerHeader className="text-left">
-          <DrawerTitle className=" text-xl lg:text-background">{title}</DrawerTitle>
+          <DrawerTitle className=" text-xl ">{title}</DrawerTitle>
          
         </DrawerHeader>
         {children}
