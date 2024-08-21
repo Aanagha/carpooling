@@ -68,7 +68,7 @@ const ActiveRides = ({ userId }: { userId: string }) => {
     }
 
     return (
-        <div className="p-6 bg-gray-50 min-h-screen flex flex-col items-center">
+        <div className="p-6 flex flex-col items-center">
             {isLoading ? (
                 <div className="flex justify-center items-center h-24">
                     <svg className="animate-spin h-8 w-8 text-blue-600" viewBox="0 0 24 24">
