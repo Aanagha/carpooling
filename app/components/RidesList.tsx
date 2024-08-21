@@ -63,18 +63,18 @@ const RideList = () => {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4">
+    <div className="container mx-auto py-2 px-4">
       {isLoading ? (
         <div className="flex justify-center items-center">
           <div className="loader animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
       ) : (
-        <ScrollArea className='m-auto lg:h-auto  h-[550px] w-50'>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-2">
+        <ScrollArea className='m-auto lg:h-auto  w-50'>
+        <div className="flex flex-row gap-6 ">
        
        {rides.filter((ride) => ride.status === 'active').length > 0 ? (
             rides.filter((ride) => ride.status === 'active').map((ride) => (
-              <div key={ride.$id} className="max-w-sm md:max-w-lg lg:max-w-xl rounded-lg overflow-hidden border-2 bg-white transition-transform transform hover:scale-105">
+              <div key={ride.$id} className=" rounded-lg overflow-hidden border-2 bg-white transition-transform transform hover:scale-105">
                 <div className="px-6 py-4">
                   <div className="flex flex-row justify-between">
                     <h3 className="font-bold text-xl mb-2 text-gray-800">

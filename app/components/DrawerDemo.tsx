@@ -67,9 +67,9 @@ export function DrawerDemo({
             {rideType}
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px] backdrop-blur-3xl bg-white/80">
+        <DialogContent className="sm:max-w-[425px] backdrop-blur-3xl bg-white/60">
           <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
+            <DialogTitle className="text-background">{title}</DialogTitle>
            
           </DialogHeader>
           {children}
@@ -91,15 +91,15 @@ export function DrawerDemo({
           {rideType}
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="backdrop-blur-3xl bg-white/10">
+      <DrawerContent className="backdrop-blur-3xl bg-white/40">
         <DrawerHeader className="text-left">
-          <DrawerTitle>{title}</DrawerTitle>
+          <DrawerTitle className=" text-xl lg:text-background">{title}</DrawerTitle>
          
         </DrawerHeader>
         {children}
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" className="bg-background" >Cancel</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
