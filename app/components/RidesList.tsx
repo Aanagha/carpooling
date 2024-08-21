@@ -95,19 +95,20 @@ const RideList = () => {
                   <label htmlFor="seats" className="text-gray-700 text-sm font-medium">Select number of seats:</label>
                   <div className="flex flex-wrap space-x-4 ml-4">
                     
-                    {ride.seats.map((seat:number) => (
-                      <label key={seat} className="inline-flex items-center cursor-pointer">
-                        <input
-                          type="radio"
-                          name="seats"
-                          value={seat}
-                          onChange={() => setSelectedSeats(seat)}
-                          className="form-radio text-blue-600 h-4 w-4"
-                          required
-                        />
-                        <span className="ml-2 text-gray-700">{seat}</span>
-                      </label>
-                    ))}
+                  {Array.from({ length: ride.seats }, (_, index) => index + 1).map((seat: number) => (
+  <label key={seat} className="inline-flex items-center cursor-pointer">
+    <input
+      type="radio"
+      name="seats"
+      value={seat}
+      onChange={() => setSelectedSeats(seat)}
+      className="form-radio text-blue-600 h-4 w-4"
+      required
+    />
+    <span className="ml-2 text-gray-700">{seat}</span>
+  </label>
+))}
+
                   </div>
                 </div>
 
