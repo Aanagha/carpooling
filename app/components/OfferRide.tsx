@@ -80,7 +80,7 @@ const OfferRide: React.FC = () => {
       <div className="p-4 pb-0">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-6">
-            <div className="p-6 border-2 border-gray-200 shadow-lg rounded-lg">
+            <div className="p-8 border-2 border-gray-200 shadow-lg rounded-lg">
               <ol className="relative border-l border-gray-200 dark:border-gray-700">
                 <li className="mb-10 ml-4">
                   <span className="absolute flex mt-1.5 items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">

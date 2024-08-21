@@ -95,7 +95,7 @@ const RideList = () => {
                   <label htmlFor="seats" className="text-gray-700 text-sm font-medium">Select number of seats:</label>
                   <div className="flex flex-wrap space-x-4 ml-4">
                     
-                    {[1, 2, 3].map((seat) => (
+                    {ride.seats.map((seat:number) => (
                       <label key={seat} className="inline-flex items-center cursor-pointer">
                         <input
                           type="radio"

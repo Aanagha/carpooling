@@ -1,0 +1,23 @@
+import React from 'react'
+import Image from "next/image";
+const Footer = () => {
+  return (
+    <footer className="bg-gray-800 text-white py-8">
+        <div className="container mx-auto px-4 text-center">
+          <p>&copy; 2024 Carpooling App. All rights reserved.</p>
+          <div className="mt-4 flex flex-wrap justify-center">
+            <a href="#" className="text-gray-400 hover:text-white mx-2 mb-2">Privacy Policy</a>
+            <a href="#" className="text-gray-400 hover:text-white mx-2 mb-2">Terms of Service</a>
+            <a href="#" className="text-gray-400 hover:text-white mx-2 mb-2">Contact Us</a>
+          </div>
+          <div className="mt-4 flex justify-center space-x-4">
+            <a href="#" className="text-gray-400 hover:text-white"><Image src="/icons/next.svg" alt="Facebook" width={24} height={24} /></a>
+            <a href="#" className="text-gray-400 hover:text-white"><Image src="/icons/vercel.svg" alt="Twitter" width={24} height={24} /></a>
+            <a href="#" className="text-gray-400 hover:text-white"><Image src="/icons/next.svg" alt="Instagram" width={24} height={24} /></a>
+          </div>
+        </div>
+      </footer>
+  )
+}
+
+export default Footer

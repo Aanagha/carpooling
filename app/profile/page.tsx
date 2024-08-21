@@ -57,7 +57,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-lg p-4">
+    <div className="mx-auto w-full max-w-lg p-4 ">
           <Button onClick={logout} variant="outline">Logout</Button>
       {user ? (
         <UserInfo user={user}/>

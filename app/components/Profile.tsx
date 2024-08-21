@@ -1,3 +1,4 @@
+"use client"
 import {
   
     LogOut,
@@ -59,8 +60,8 @@ import { DrawerDemo } from "./DrawerDemo";
             
             <div className="loader border-t-2 m-auto rounded-full border-gray-500 bg-gray-300 animate-spin
             aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <>
-                        <DrawerDemo action={false} rideType="Sign Up" variant="default" bc="white" title="Signup"><Register/></DrawerDemo>
-                      <DrawerDemo action={false} rideType="Login" variant="default" bc="white"  title="Login"><Login  /></DrawerDemo>
+                        <DrawerDemo action={false} rideType="Sign Up" variant="link" bc="transparent" title="Signup"><Register/></DrawerDemo>
+                      <DrawerDemo action={false} rideType="Login" variant="link" bc="transparent"  title="Login"><Login  /></DrawerDemo>
                         </>
                       }
  </>
