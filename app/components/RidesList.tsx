@@ -73,14 +73,14 @@ const RideList = () => {
         </div>
       ) : (
         <ScrollArea className='m-auto lg:h-auto  w-50'>
-        <div className="flex flex-row gap-6 ">
+        <div className="flex overflow-scroll flex-col gap-6 ">
        
        {rides.filter((ride) => ride.status === 'active').length > 0 ? (
             rides.filter((ride) => ride.status === 'active').map((ride) => (
-              <div key={ride.$id} className=" rounded-lg overflow-hidden  bg-white/20 blur-background border-0 transition-transform transform hover:scale-105">
+              <div key={ride.$id} className=" rounded-lg overflow-hidden  bg-white/10 blur-background border-[1px] border-black transition-transform transform ">
                 <div className="px-6 py-4">
                   <div className="flex flex-row justify-between">
-                    <h2 className="font-bold text-2xl mb-2 text-gray-300">
+                    <h2 className="font-bold text-2xl mb-2 text-gray-800">
                       {ride.pickupLocation} to {ride.dropoffLocation}
                     </h2>
                     <span className={`inline-block bg-${ride.status === 'active' ? 'green' : 'red'}-500 text-white text-xs leading-6 font-semibold rounded-full p-2`}>
@@ -88,7 +88,10 @@ const RideList = () => {
                     </span>
                   </div>
                   <p className="text-background">
-                    Departure: {new Date(ride.departureTime).toLocaleString()}
+                  <span>
+  {new Date(ride.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+</span>
+
                   </p>
                   <p className="text-background">Vehicle: {ride.vehicleType}</p>
                   <p className="text-background">Seats Available: {ride.seats}</p>
@@ -135,7 +138,7 @@ const RideList = () => {
            
   
         </div>
-        <ScrollBar orientation="horizontal" className='lg:visible hidden' />
+        <ScrollBar orientation="vertical" className='lg:visible hidden' />
         </ScrollArea>
       )}
     </div>
