@@ -65,7 +65,7 @@ const ProfilePage = () => {
         <p>User not found.</p>
       )}
       <Notifications userId={user?.$id} />
-      <ActiveRides  userId={user?.$id} />
+      <ActiveRides username={user?.name}  userId={user?.$id} />
     </div>
   );
 };
