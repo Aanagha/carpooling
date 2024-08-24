@@ -29,7 +29,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 pt-6 md:p-6 lg:p-12">
+    <div className="container mx-auto">
       <div className="max-w-md mx-auto  p-4 md:p-6 lg:p-12">
        
         <form onSubmit={(e) => { e.preventDefault(); login(); }} className="space-y-4">
@@ -42,7 +42,7 @@ const Login: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="p-2 border border-gray-300 rounded-md w-full"
+              className="p-2 border bg-transparent  rounded-md w-full"
             />
           </div>
           <div className="flex flex-col mb-4">
@@ -54,18 +54,16 @@ const Login: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="p-2 border border-gray-300 rounded-md w-full"
+              className="p-2 border bg-transparent  rounded-md w-full"
             />
           </div>
-          <Button type="submit" className=" hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+          <Button type="submit" className="  border font-bold py-2 px-4 rounded w-full">
             {loading ? 
 <div className="loader mx-auto border-t-2 rounded-full border-gray-500 bg-gray-300 animate-spin
 aspect-square w-8 flex justify-center items-center text-yellow-700"></div>: "Login"} 
           </Button>
         </form>
-        <p className="mt-4 text-sm text-gray-600">
-          Don&apos;t have an account? <a href="/" className="text-blue-500 hover:text-blue-700">Register here</a>
-        </p>
+        
       </div>
     </div>
   );

@@ -14,26 +14,23 @@ import {
   Dialog,
   DialogTrigger,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
+ 
 } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
 
 export function DrawerDemo({
-  bc,
+
   children,
-  variant,
-  rideType,
-  title,
-  action,
+
+
+
+  trigger
 }: {
   bc: string;
   children: React.ReactNode;
   variant: string;
-  rideType: string;
   title: string;
-  action: boolean;
+  trigger: React.ReactNode
 }) {
   const [open, setOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -57,21 +54,10 @@ export function DrawerDemo({
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button
-            className={`m-auto text-black dark:text-white border-t-4 border-${bc} ${
-              action ? "rounded-tl-full rounded-br-full" : ""
-            }`}
-            variant={variant as any}
-            size="lg"
-          >
-            {rideType}
-          </Button>
+          {trigger}
         </DialogTrigger>
-        <DialogContent className="  backdrop-blur-2xl bg-white/50">
-          <DialogHeader>
-            <DialogTitle >{title}</DialogTitle>
-           
-          </DialogHeader>
+        <DialogContent className="  backdrop-blur-xl bg-white/80">
+
           {children}
         </DialogContent>
       </Dialog>
@@ -81,21 +67,10 @@ export function DrawerDemo({
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button
-          className={`m-auto border-t-4 text-black dark:text-white border-${bc} ${
-            action ? "rounded-tl-full rounded-br-full" : ""
-          }`}
-          variant={variant as any}
-          size={'lg'}
-        >
-          {rideType}
-        </Button>
+        {trigger}
       </DrawerTrigger>
-      <DrawerContent className="backdrop-blur-2xl bg-white/30">
-        <DrawerHeader className="text-left">
-          <DrawerTitle className=" text-xl ">{title}</DrawerTitle>
-         
-        </DrawerHeader>
+      <DrawerContent className="backdrop-blur-2xl bg-white/80">
+       
         {children}
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>

@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { databases, Query } from '@/lib/appwrite';
+import { Cover } from '@/components/ui/cover';
 
-const ActiveRides = ({ userId }: { userId: string }) => {
+const ActiveRides = ({ userId ,username }: { userId: string ;username:string}) => {
     const [activeRides, setActiveRides] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -68,7 +69,7 @@ const ActiveRides = ({ userId }: { userId: string }) => {
     }
 
     return (
-        <div className="p-6 flex flex-col items-center">
+        <div className="p-0 lg:p-24 flex flex-col ">
             {isLoading ? (
                 <div className="flex justify-center items-center h-24">
                     <svg className="animate-spin h-8 w-8 text-blue-600" viewBox="0 0 24 24">
@@ -78,14 +79,18 @@ const ActiveRides = ({ userId }: { userId: string }) => {
                     <p className="ml-4 text-gray-500">Loading active rides...</p>
                 </div>
             ) : (
-                activeRides.map((ride) => (
-                    <div key={ride.$id} className="w-full max-w-md bg-white rounded-lg shadow-lg p-6 mb-6 transition-transform transform hover:scale-105 hover:shadow-xl">
+             <div className='p-4'>
+             <h1 className='text-3xl text-center lg:text-6xl mb-4 font-bold'>Welcome !<br /> <Cover className='italic capitalize'>{username}</Cover></h1>
+             <p className='mb-4 text-center text-xl text-gray-600 '>Hop in ! Connect with your next carpool</p>
+            { activeRides.map((ride) => (
+                    <div key={ride.$id} className="w-[300px]  bg-white rounded-lg shadow-lg border-2 border-black p-6 mx-auto  transition-transform transform hover:scale-105 hover:shadow-xl">
                         <h4 className="text-2xl font-bold text-gray-800 mb-2">{ride.pickupLocation} to {ride.dropoffLocation}</h4>
                         <p className="text-gray-500 text-sm mb-1"><strong>Departure:</strong> {new Date(ride.departureTime).toLocaleString()}</p>
                         <p className="text-gray-500 text-sm mb-1"><strong>Status:</strong> <span className={`inline-block px-2 py-1 rounded-full text-white text-xs ${ride.status === 'active' ? 'bg-green-500' : 'bg-red-500'}`}>{ride.status}</span></p>
                         <p className="text-gray-500 text-sm"><strong>Vehicle:</strong> {ride.vehicleType}</p>
                     </div>
-                ))
+                ))}
+             </div>
             )}
         </div>
     );

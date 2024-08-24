@@ -30,7 +30,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 pt-6 md:p-6 lg:p-12">
+    <div className="container mx-auto">
       <div className="max-w-md mx-auto    p-4 md:p-6 lg:p-12">
        
         <form onSubmit={(e) => { e.preventDefault(); register(); }} className="space-y-4">
@@ -76,9 +76,7 @@ const Register: React.FC = () => {
 aspect-square w-8 flex justify-center items-center text-yellow-700"></div>: "Register"} 
           </Button>
         </form>
-        <p className="mt-4 text-sm text-gray-600">
-          Already have an account? <a href="/" className="text-blue-500 hover:text-blue-700">Login here</a>
-        </p>
+     
       </div>
     </div>
   );

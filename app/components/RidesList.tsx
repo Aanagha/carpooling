@@ -74,7 +74,7 @@ const RideList = () => {
       ) : (
         <ScrollArea className='m-auto lg:h-auto  w-50'>
         <div className="flex overflow-scroll flex-col gap-6 ">
-       
+       <h1 className='text-2xl font-bold italic'>Available rides</h1>
        {rides.filter((ride) => ride.status === 'active').length > 0 ? (
             rides.filter((ride) => ride.status === 'active').map((ride) => (
               <div key={ride.$id} className=" rounded-lg overflow-hidden  bg-white/10 blur-background border-[1px] border-black transition-transform transform ">

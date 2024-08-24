@@ -1,6 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=New+Amsterdam&display=swap');
+.roboto-font {
+  font-family: "New Amsterdam", sans-serif;
+ 
+}
 
 @layer base {
   :root {

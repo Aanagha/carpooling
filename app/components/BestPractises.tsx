@@ -13,7 +13,7 @@ const BestPractises = () => {
           { title: "Be Punctual", description: "Arrive on time to ensure a smooth ride for everyone.", icon: "/icons/fun-3d-cartoon-teenage-boy.jpg" }
         ].map((practice, index) => (
           <div key={index} className="relative flex flex-col items-center sm:w-1/3"  >
-            <div className="bg-green-500 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold z-10 mb-4">
+            <div className="bg-[#CBF08E] text-black rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold z-10 mb-4">
               {index + 1}
             </div>
            

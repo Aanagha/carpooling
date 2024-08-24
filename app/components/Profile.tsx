@@ -18,11 +18,11 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
   import Register from "./Register";
-import Login from "./Login";
 import { account } from "@/lib/appwrite";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { DrawerDemo } from "./DrawerDemo";
+import { UserTabs } from "./UserTabs";
   export function Profile() {
     const [loading,setLoading] =  useState(false);
 
@@ -60,8 +60,14 @@ import { DrawerDemo } from "./DrawerDemo";
             
             <div className="loader border-t-2 m-auto rounded-full border-gray-500 bg-gray-300 animate-spin
             aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <div className="flex flex-row gap-0">
-                                     <DrawerDemo  action={false} rideType="Signup" variant="default" bc="transparent"  title="Sign up"><Register/></DrawerDemo>
-                                     <DrawerDemo  action={false} rideType="Login" variant="default" bc="transparent"  title="Login"><Login  /></DrawerDemo>
+                                     <DrawerDemo trigger={  <Button
+            className={`m-auto hover:text-black hover:border-2 dark:text-white bg-black  `}
+            variant={'default'}
+            size="lg"
+          >
+         Login
+          </Button>}   variant="default" bc="black"  title="Sign up"><UserTabs/></DrawerDemo>
+ 
                         </div>
                       }
  </>
@@ -84,11 +90,11 @@ import { DrawerDemo } from "./DrawerDemo";
         </div>
         </DropdownMenuTrigger>}
        
-        <DropdownMenuContent className="w-56">
+        <DropdownMenuContent className="w-56 backdrop-blur-2xl bg-white/80">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => window.location.href = '/profile'}>
+            <DropdownMenuItem className="cursor-pointer" onClick={() => window.location.href = '/profile'}>
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </DropdownMenuItem>
