@@ -4,10 +4,8 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
+
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import {
@@ -56,7 +54,7 @@ export function DrawerDemo({
         <DialogTrigger asChild>
           {trigger}
         </DialogTrigger>
-        <DialogContent className="  backdrop-blur-xl bg-white/80">
+        <DialogContent className="backdrop-blur-xl bg-white/80">
 
           {children}
         </DialogContent>

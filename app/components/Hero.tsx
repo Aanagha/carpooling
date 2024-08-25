@@ -71,7 +71,7 @@ const Hero = () => {
                  <h1 className="text-3xl md:text-4xl lg:text-6xl font-semibold max-w-7xl mx-auto text-center mt-6 relative z-20 py-6 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white ">
                    <Cover >Ride Together</Cover>,Save Together 
       </h1>
-      <h2 className='justify-center text-center align-center text-bold my-3 '>
+      <h2 className=' text-center align-center text-bold my-3 '>
         Discover the convenience of carpooling, reduce fuel costs,and enhance your experience
       </h2>
                     {/* <div className="flex flex-row justify-center items-center gap-6 mt-8">
@@ -91,7 +91,7 @@ const Hero = () => {
         </Button>}   variant="default" bc="white"  title="Join a Ride"><RideList/></DrawerDemo>
             </div> */}
             <DrawerDemo trigger={  <Button
-          className={`m-auto hover:border-t-4 border-black border-2 bg-white text-black hover:text-black `}
+          className={`m-auto hover:border-t-4 border-white hover:border-black border-2  bg-black text-white hover:text-black rounded-tl-full rounded-br-full`}
           variant={'default'}
             size="lg"
           >

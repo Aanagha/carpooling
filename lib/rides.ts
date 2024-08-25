@@ -1,4 +1,4 @@
-import {  databases, ID } from './appwrite';
+import {  databases, ID, Query } from './appwrite';
 
 const notifyOfferer = async (message: string, offererId: string) => {
     try {
@@ -36,8 +36,23 @@ export const createRide = async (rideData: any) => {
         throw error;
     }
 };
+
 export const fetchRides = async () => {
-    return databases.listDocuments(process.env.NEXT_PUBLIC_DB_ID as string, process.env.NEXT_PUBLIC_COLLECTION_ID as string);
+    try {
+        // Query to get only rides with status 'active'
+        const activeRidesQuery = Query.equal('status', 'active');
+
+        const response = await databases.listDocuments(
+            process.env.NEXT_PUBLIC_DB_ID as string,
+            process.env.NEXT_PUBLIC_COLLECTION_ID as string,
+            [activeRidesQuery] // Pass the active status query
+        );
+
+        return response.documents;
+    } catch (error) {
+        console.error("Failed to fetch rides:", error);
+        throw new Error("Could not fetch rides.");
+    }
 };
 export const reserveRide = async (rideId: string, walletAddress: string, seats: number) => {
     try {

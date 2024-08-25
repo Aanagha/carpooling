@@ -4,22 +4,22 @@ import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { createRide } from '@/lib/rides';
 import { toast } from "sonner";
-import { account } from "@/lib/appwrite";
+import { account, databases, getLocationList } from "@/lib/appwrite";
 import { RideSelect } from "./RideSelect";
 
 const OfferRide: React.FC = () => {
   const [user, setUser] = React.useState<any>(null);
-  const [pickupOptions, setPickupOptions] = React.useState<string[]>([]);
+
   const [pickupLocation, setPickupLocation] = React.useState<string>('');
   const [dropoffLocation, setDropoffLocation] = React.useState<string>('');
+
 
   React.useEffect(() => {
     const fetchUser = async () => {
       try {
         const userData = await account.get();
         setUser(userData);
-        const options = ["demoOption1", "demoOption2", "demoOption3"];
-        setPickupOptions(options);
+        
       } catch (error) {
         console.error("User not logged in:", error);
       }
@@ -39,9 +39,12 @@ const OfferRide: React.FC = () => {
   });
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const [message, setMessage] = React.useState<string | null>(null);
-
   const onSubmit = async (data: any) => {
+    if (pickupLocation === dropoffLocation) {
+      toast.error('Pickup and drop-off locations cannot be the same.');
+      return;
+    }
+  
     setIsLoading(true);
     try {
       const rideData = {
@@ -54,15 +57,15 @@ const OfferRide: React.FC = () => {
       };
       console.log(rideData);
       await createRide(rideData);
-      setMessage('Ride successfully created!');
-      toast(message);
+   
+      toast('Ride successfully created!');
     } catch (error) {
       console.error('Failed to create ride:', error);
-      setMessage('Failed to create ride. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   if(isLoading){
     return (
@@ -87,13 +90,13 @@ const OfferRide: React.FC = () => {
                   <span className="absolute flex mt-1.5 items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
                     <div className="p-1 bg-blue-600 rounded-full"></div>
                   </span>
-                  <RideSelect displaytext="Select pickup location..." location={pickupLocation} onLocationChange={(location) => setPickupLocation(location)} />
+                  <RideSelect  displaytext="Select pickup location..." location={pickupLocation} onLocationChange={(location) => setPickupLocation(location)} />
                 </li>
                 <li className="ml-4">
                   <span className="absolute flex mt-1.5 items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
                     <div className="p-1 bg-blue-600 rounded-full"></div>
                   </span>
-                  <RideSelect displaytext="Select drop location..." location={dropoffLocation} onLocationChange={(location) => setDropoffLocation(location)} />
+                  <RideSelect  displaytext="Select drop location..." location={dropoffLocation} onLocationChange={(location) => setDropoffLocation(location)} />
                 </li>
               </ol>
             </div>
@@ -177,7 +180,7 @@ const OfferRide: React.FC = () => {
             </div>
           </div>
 
-          <Button type="submit"  className="mt-4 w-full bg-blue-600  text-gray-200">
+          <Button type="submit"  className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-gray-200">
               Offer Ride
             </Button>
         </form>

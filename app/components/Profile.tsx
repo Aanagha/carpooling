@@ -91,7 +91,7 @@ import Login from "./Login";
         </div>
         </DropdownMenuTrigger>}
        
-        <DropdownMenuContent className="w-56 backdrop-blur-2xl bg-white/80">
+        <DropdownMenuContent className="w-56 backdrop-blur-2xl bg-gray-200">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>

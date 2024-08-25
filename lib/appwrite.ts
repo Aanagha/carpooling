@@ -54,6 +54,19 @@ const getUserRides = async (): Promise<RideType[] | null> => {
         return null;
     }
 };
-
+const getLocationList = async (): Promise<{ name: string }[]> => {
+    try {
+      const response = await databases.listDocuments(
+        process.env.NEXT_PUBLIC_DB_ID as string, // Your database ID
+        process.env.NEXT_PUBLIC_LOCATION_COLLECTION_ID as string // Your collection ID for locations
+      );
+      // Assuming each document has a `name` field
+      return response.documents.map((document: any) => document.name);
+    } catch (error) {
+      console.error('Error fetching locations:', error);
+      return []; // Return an empty array if an error occurs
+    }
+  };
+  
 // Export the Appwrite services and utilities
-export { client, account, databases, ID, Query, getUserRides };
+export { client, account, databases, ID, Query, getUserRides ,getLocationList};
