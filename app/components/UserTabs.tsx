@@ -5,21 +5,21 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import Register from "./Register"
-import Login from "./Login"
+import OfferRide from "./OfferRide"
+import RideList from "./RidesList"
 
 export function UserTabs() {
   return (
-    <Tabs defaultValue="login" className="w-[400px]">
+    <Tabs defaultValue="login" >
       <TabsList className="grid grid-cols-2 w-75  w-[280px]  items-center mx-auto justify-center">
-        <TabsTrigger value="register">Register</TabsTrigger>
-        <TabsTrigger value="login">Login</TabsTrigger>
+        <TabsTrigger value="register">Offer a ride</TabsTrigger>
+        <TabsTrigger value="login">Join a ride</TabsTrigger>
       </TabsList>
       <TabsContent value="register">
-      <Register/>
+      <OfferRide/>
       </TabsContent>
       <TabsContent value="login">
-      <Login/>
+      <RideList/>
       </TabsContent>
     </Tabs>
   )

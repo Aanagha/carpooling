@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { DrawerDemo } from "./DrawerDemo";
 import { UserTabs } from "./UserTabs";
+import Login from "./Login";
   export function Profile() {
     const [loading,setLoading] =  useState(false);
 
@@ -60,13 +61,13 @@ import { UserTabs } from "./UserTabs";
             
             <div className="loader border-t-2 m-auto rounded-full border-gray-500 bg-gray-300 animate-spin
             aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <div className="flex flex-row gap-0">
-                                     <DrawerDemo trigger={  <Button
-            className={`m-auto hover:text-black hover:border-2 dark:text-white bg-black  `}
-            variant={'default'}
-            size="lg"
-          >
-         Login
-          </Button>}   variant="default" bc="black"  title="Sign up"><UserTabs/></DrawerDemo>
+                                      <DrawerDemo trigger={  <Button
+              className={`m-auto hover:text-black hover:border-2 dark:text-white bg-black  `}
+              variant={'default'}
+              size="lg"
+            >
+          Login
+            </Button>}   variant="default" bc="black"  title="Sign up"><Login/></DrawerDemo>
  
                         </div>
                       }

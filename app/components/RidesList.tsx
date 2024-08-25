@@ -66,7 +66,7 @@ const RideList = () => {
   };
 
   return (
-    <div className="container mx-auto py-2 px-4">
+    <div className="container mx-auto py-2 px-4 w-[400px]">
       {isLoading ? (
         <div className="flex justify-center items-center">
           <div className="loader animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>

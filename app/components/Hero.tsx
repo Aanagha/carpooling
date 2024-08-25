@@ -9,6 +9,8 @@ import { account, databases, Query } from '@/lib/appwrite';
 import { Cover } from '@/components/ui/cover';
 import { Button } from '@/components/ui/button';
 import Image from "next/image";
+import { UserTabs } from './UserTabs';
+import Register from './Register';
 const Hero = () => {
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -62,10 +64,11 @@ const Hero = () => {
 
     return (
         <>
-            {user && hasActiveRides ? (
+            { hasActiveRides ? (
                 <ActiveRides userId={user.$id} username={user.name} />
             ) : (
-                <section className="text-center flex flex-col lg:flex-row  h-[80vh] justify-between items-center px-4 lg:px-20">
+               <>
+               {!user ? <section className="text-center flex flex-col lg:flex-row  h-[80vh] justify-between items-center px-4 lg:px-20">
                  <div className='lg:w-1/2'>
                  <h1 className="text-3xl md:text-4xl lg:text-6xl font-semibold max-w-7xl mx-auto text-center mt-6 relative z-20 py-6 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white ">
                    <Cover >Ride Together</Cover>,Save Together 
@@ -73,7 +76,7 @@ const Hero = () => {
       <h2 className='justify-center text-center align-center text-bold my-3 '>
         Discover the convenience of carpooling, reduce fuel costs,and enhance your experience
       </h2>
-                    <div className="flex flex-row justify-center items-center gap-6 mt-8">
+                    {/* <div className="flex flex-row justify-center items-center gap-6 mt-8">
                     <DrawerDemo trigger={  <Button
           className={`m-auto hover:border-t-4 border-black border-2 bg-white text-black hover:text-black rounded-tl-full rounded-br-full`}
           variant={'default'}
@@ -88,13 +91,26 @@ const Hero = () => {
         >
          Join a Ride
         </Button>}   variant="default" bc="white"  title="Join a Ride"><RideList/></DrawerDemo>
-            </div>
+            </div> */}
+            <DrawerDemo trigger={  <Button
+          className={`m-auto hover:border-t-4 border-black border-2 bg-white text-black hover:text-black `}
+          variant={'default'}
+            size="lg"
+          >
+         Get started
+          </Button>}   variant="default" bc="black"  title="Sign up"><Register/></DrawerDemo>
                  </div>
             
       <div className='my-4 items-center justify-center bg-yellow-800 rounded-full p-10'>
       <Image src="/poster.png" alt="Logo" width={185} height={180} />
       </div>
-                </section>
+                </section> : <div className='m-auto items-center justify-center '>
+                <h1 className='text-3xl text-center lg:text-6xl mb-4 font-bold'>Welcome !<br /> <Cover className='italic capitalize'>{user.name}</Cover></h1>
+                <p className='mb-4 text-center text-xl text-gray-600 '>Hop in ! Connect with your next carpool</p>
+                <UserTabs/>
+                </div>
+                }
+               </> 
             )}
               
         </>
