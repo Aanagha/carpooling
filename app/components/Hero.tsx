@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { DrawerDemo } from './DrawerDemo';
 import { Loader } from 'lucide-react';
 import ActiveRides from './ActiveRides';
-import OfferRide from './OfferRide';
-import RideList from './RidesList';
 import { account, databases, Query } from '@/lib/appwrite';
 import { Cover } from '@/components/ui/cover';
 import { Button } from '@/components/ui/button';
@@ -104,7 +102,7 @@ const Hero = () => {
       <div className='my-4 items-center justify-center bg-yellow-800 rounded-full p-10'>
       <Image src="/poster.png" alt="Logo" width={185} height={180} />
       </div>
-                </section> : <div className='m-auto items-center justify-center '>
+                </section> : <div className='m-auto items-center justify-center px-3'>
                 <h1 className='text-3xl text-center lg:text-6xl mb-4 font-bold'>Welcome !<br /> <Cover className='italic capitalize'>{user.name}</Cover></h1>
                 <p className='mb-4 text-center text-xl text-gray-600 '>Hop in ! Connect with your next carpool</p>
                 <UserTabs/>
