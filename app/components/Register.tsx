@@ -24,7 +24,7 @@ const Register: React.FC = () => {
       // Create user document in the collection
       await databases.createDocument(
         process.env.NEXT_PUBLIC_DB_ID as string, // Your database ID
-        process.env.NEXT_PUBLIC_COLLECTION_ID as string, // Your user collection ID
+        process.env.NEXT_PUBLIC_USER_COLLECTION_ID as string, // Your user collection ID
         user.$id,
         {
           email: email,
