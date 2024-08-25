@@ -72,12 +72,12 @@ const RideList = () => {
         <div className="loader animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
       </div>
     ) : (
-      <ScrollArea className="h-[calc(100vh-120px)]">
+      <ScrollArea >
         <h1 className="text-3xl font-bold mb-8 text-center">Available Rides</h1>
         {rides.filter((ride) => ride.status === 'active').length > 0 ? (
           <div className="grid gap-8">
             {rides.filter((ride) => ride.status === 'active').map((ride) => (
-              <div key={ride.$id} className=" dark:bg-gray-800 rounded-xl blur-background border-2 border-black bg-white/20  overflow-hidden transition-all hover:shadow-xl">
+              <div key={ride.$id} className="bg-white dark:bg-gray-800 rounded-xl blur-background bg-white/20 border border-black overflow-hidden transition-all hover:shadow-xl">
                 <div className="p-6">
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
