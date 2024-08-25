@@ -76,7 +76,7 @@ const OfferRide: React.FC = () => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-lg px-4 sm:px-2 lg:px-2 ">
+    <div className="mx-auto w-full max-w-lg px-4 sm:px-2 lg:px-2 mt-6 ">
       <div className="p-4 pb-0">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-6">
@@ -176,7 +176,7 @@ const OfferRide: React.FC = () => {
             </div>
           </div>
 
-          <Button type="submit" variant={'outline'} className="mt-4 w-full bg-primary text-background">
+          <Button type="submit"  className="mt-4 w-full bg-blue-600  text-gray-200">
               Offer Ride
             </Button>
         </form>

@@ -6,7 +6,7 @@ import { account } from '@/lib/appwrite';
 import { toast } from 'sonner';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Terminal } from 'lucide-react';
+import { Car, Clock, Terminal, Users } from 'lucide-react';
 
 
 const RideList = () => {
@@ -66,82 +66,83 @@ const RideList = () => {
   };
 
   return (
-    <div className="container mx-auto py-2 px-4 w-[400px]">
-      {isLoading ? (
-        <div className="flex justify-center items-center">
-          <div className="loader animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      ) : (
-        <ScrollArea className='m-auto lg:h-auto  w-50'>
-        <div className="flex overflow-scroll flex-col gap-6 ">
-       <h1 className='text-2xl font-bold italic'>Available rides</h1>
-       {rides.filter((ride) => ride.status === 'active').length > 0 ? (
-            rides.filter((ride) => ride.status === 'active').map((ride) => (
-              <div key={ride.$id} className=" rounded-lg overflow-hidden  bg-white/10 blur-background border-[1px] border-black transition-transform transform ">
-                <div className="px-6 py-4">
-                  <div className="flex flex-row justify-between">
-                    <h2 className="font-bold text-2xl mb-2 text-gray-800">
+    <div className="container mx-auto py-6 px-4 max-w-3xl">
+    {isLoading ? (
+      <div className="flex justify-center items-center h-64">
+        <div className="loader animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+      </div>
+    ) : (
+      <ScrollArea className="h-[calc(100vh-120px)]">
+        <h1 className="text-3xl font-bold mb-8 text-center">Available Rides</h1>
+        {rides.filter((ride) => ride.status === 'active').length > 0 ? (
+          <div className="grid gap-8">
+            {rides.filter((ride) => ride.status === 'active').map((ride) => (
+              <div key={ride.$id} className=" dark:bg-gray-800 rounded-xl blur-background border-2 border-black bg-white/20  overflow-hidden transition-all hover:shadow-xl">
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
                       {ride.pickupLocation} to {ride.dropoffLocation}
                     </h2>
-                    <span className={`inline-block bg-${ride.status === 'active' ? 'green' : 'red'}-500 text-white text-xs leading-6 font-semibold rounded-full p-2`}>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      ride.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
                       {ride.status}
                     </span>
                   </div>
-                  <p className="text-background">
-                  <span>
-  {new Date(ride.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-</span>
-
-                  </p>
-                  <p className="text-background">Vehicle: {ride.vehicleType}</p>
-                  <p className="text-background">Seats Available: {ride.seats}</p>
-                </div>
-
-                <div className="px-6 py-4 flex flex-wrap items-center justify-center">
-                  <label htmlFor="seats" className="text-gray-700 text-sm font-medium">Select number of seats:</label>
-                  <div className="flex flex-wrap space-x-4 ml-4">
-                    
-                  {Array.from({ length: ride.seats }, (_, index) => index + 1).map((seat: number) => (
-  <label key={seat} className="inline-flex items-center cursor-pointer">
-    <input
-      type="radio"
-      name="seats"
-      value={seat}
-      onChange={() => setSelectedSeats(seat)}
-      className="form-radio text-blue-600 h-4 w-4"
-      required
-    />
-    <span className="ml-2 text-gray-700">{seat}</span>
-  </label>
-))}
-
+                  <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                    <p className="flex items-center">
+                      <Clock className="w-4 h-4 mr-2" />
+                      {new Date(ride.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                    <p className="flex items-center">
+                      <Car className="w-4 h-4 mr-2" />
+                      {ride.vehicleType}
+                    </p>
+                    <p className="flex items-center">
+                      <Users className="w-4 h-4 mr-2" />
+                      {ride.seats} seats available
+                    </p>
                   </div>
-                </div>
-
-                <div className="px-6 py-4">
-                  <Button onClick={() => handleReserveRide(ride.$id)} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 ease-in-out">
-                    Reserve
+                  <div className="mt-6">
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Select number of seats:</p>
+                    <div className="flex flex-wrap gap-3">
+                      {Array.from({ length: ride.seats }, (_, index) => index + 1).map((seat) => (
+                        <label key={seat} className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name={`seats-${ride.$id}`}
+                            value={seat}
+                            onChange={() => setSelectedSeats(seat)}
+                            className="form-radio text-blue-600 h-4 w-4"
+                            required
+                          />
+                          <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">{seat}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <Button 
+                    onClick={() => handleReserveRide(ride.$id)} 
+                    className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 ease-in-out"
+                  >
+                    Reserve Ride
                   </Button>
                 </div>
               </div>
-            ))
-          ) : (
-            <Alert>
-            <Terminal className="h-4 w-4" />
-            
-            <AlertDescription className='mb-4'>
-             No rides available for now. Make a new ride
+            ))}
+          </div>
+        ) : (
+          <Alert className="bg-yellow-50 border-yellow-200 text-yellow-800">
+            <Terminal className="h-5 w-5" />
+            <AlertDescription className="ml-2">
+              No rides available at the moment. Why not create a new ride?
             </AlertDescription>
-
           </Alert>
-          )}
-           
-  
-        </div>
-        <ScrollBar orientation="vertical" className='lg:visible hidden' />
-        </ScrollArea>
-      )}
-    </div>
+        )}
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
+    )}
+  </div>
   );
 };
 

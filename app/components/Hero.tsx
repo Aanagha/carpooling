@@ -104,7 +104,7 @@ const Hero = () => {
       </div>
                 </section> : <div className='m-auto items-center justify-center px-3'>
                 <h1 className='text-3xl text-center lg:text-6xl mb-4 font-bold'>Welcome !<br /> <Cover className='italic capitalize'>{user.name}</Cover></h1>
-                <p className='mb-4 text-center text-xl text-gray-600 '>Hop in ! Connect with your next carpool</p>
+                <p className=' text-center text-lg text-gray-600 mb-6'>Hop in ! Connect with your next carpool</p>
                 <UserTabs/>
                 </div>
                 }

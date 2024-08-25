@@ -31,7 +31,7 @@ const Login: React.FC = () => {
   return (
     <div className="container mx-auto">
       <div className="max-w-md mx-auto  p-4 md:p-6 lg:p-12">
-       
+      <h1 className="text-2xl font-bold mb-4 text-center">Login </h1>
         <form onSubmit={(e) => { e.preventDefault(); login(); }} className="space-y-4">
           <div className="flex flex-col mb-4">
             <Label className="text-sm font-bold mb-2" htmlFor="email">Email</Label>
@@ -57,7 +57,7 @@ const Login: React.FC = () => {
               className="p-2 border bg-transparent  rounded-md w-full"
             />
           </div>
-          <Button type="submit" className="  border font-bold py-2 px-4 rounded w-full">
+          <Button type="submit" className="  border font-bold py-2 px-4 rounded w-full bg-blue-500 hover:bg-blue-700 text-gray-200">
             {loading ? 
 <div className="loader mx-auto border-t-2 rounded-full border-gray-500 bg-gray-300 animate-spin
 aspect-square w-8 flex justify-center items-center text-yellow-700"></div>: "Login"} 
