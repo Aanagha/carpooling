@@ -1,6 +1,6 @@
 import {  databases, ID, Query } from './appwrite';
 
- enum BookingStatus {
+ export enum BookingStatus {
     Pending = 'pending',
     Approved = 'approved',
     Rejected = 'rejected',
@@ -53,6 +53,7 @@ console.log(response.documents)
 };
 
 
+
 export const joinRide = async (rideId: string, user: any) => {
     try {
         // Fetch the ride data
@@ -69,34 +70,39 @@ export const joinRide = async (rideId: string, user: any) => {
 
         // Check if there are available seats
         if (ride.availableSeats > 0) {
-            // Create a new booking in the bookings collection
+            // Create a new booking in the bookings collection with status 'Pending'
             const bookingData = {
                 rideId: rideId,
                 userId: user.$id,
-                status: BookingStatus.Approved, // Automatically approve if seats are available
+                status: BookingStatus.Pending, // Set status to Pending for approval
             };
 
             const booking = await databases.createDocument(
                 process.env.NEXT_PUBLIC_DB_ID as string, // Booking database ID
-                process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,ID.unique(), // Replace with your bookings collection ID
+                process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string, // Replace with your bookings collection ID
+                ID.unique(), // Generate a unique ID for the booking
                 bookingData
             );
 
-            // Update the ride to decrement available seats and add the booking reference to bookedBy array
+            // Update the ride to add the booking reference to bookedBy array
             const updatedRide = {
-                availableSeats: ride.availableSeats - 1,
-                status: ride.availableSeats - 1 === 0 ? 'filled' : ride.status,
                 bookedBy: [...ride.bookedBy, booking.$id], // Store booking reference in bookedBy array
             };
-console.log(updatedRide)
-            await databases.updateDocument(
-                process.env.NEXT_PUBLIC_DB_ID as string,
-                process.env.NEXT_PUBLIC_COLLECTION_ID as string,
-                rideId,
-                updatedRide
-            );
+            
+            console.log(updatedRide);
+            
+            if (booking) {
+                await databases.updateDocument(
+                    process.env.NEXT_PUBLIC_DB_ID as string,
+                    process.env.NEXT_PUBLIC_COLLECTION_ID as string,
+                    rideId,
+                    updatedRide
+                );
+            } else {
+                return "Unable to book ride. Try again later.";
+            }
 
-            return 'Successfully joined the ride!';
+            return 'Your booking request is pending approval by the offerer.';
         } else {
             throw new Error('Ride is full. Request is pending approval.');
         }

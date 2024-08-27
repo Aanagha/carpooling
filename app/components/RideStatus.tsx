@@ -1,9 +1,14 @@
-"use client"
+"use client";
 import { useEffect, useState } from 'react';
 import { client, databases } from '@/lib/appwrite';
+import { BookingStatus } from '@/lib/rides';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
-export default function RideStatus({ rideId }: { rideId: string }) {
+
+export default function RideStatus({ rideId }: { rideId: any }) {
     const [ride, setRide] = useState<any>(null);
+    const [bookings, setBookings] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -14,7 +19,21 @@ export default function RideStatus({ rideId }: { rideId: string }) {
                     process.env.NEXT_PUBLIC_COLLECTION_ID as string,
                     rideId
                 );
-                setRide(response);  // Fix: setRide(response.documents) should be setRide(response)
+                setRide(response);
+
+                // Fetch bookings for this ride
+                if (response.bookedBy && response.bookedBy.length > 0) {
+                    const bookingResponses = await Promise.all(
+                        response.bookedBy.map((bookingId: string) =>
+                            databases.getDocument(
+                                process.env.NEXT_PUBLIC_DB_ID as string,
+                                process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,
+                                bookingId
+                            )
+                        )
+                    );
+                    setBookings(bookingResponses);
+                }
             } catch (err: any) {
                 setError(err.message);
             }
@@ -36,30 +55,57 @@ export default function RideStatus({ rideId }: { rideId: string }) {
         };
     }, [rideId]);
 
-    const approveRequest = async (userId: string) => {
+    const approveRequest = async (bookingId: string) => {
         try {
-            const updatedRide = {
-                ...ride,
-                bookedBy: ride.bookedBy.map((user: any) =>
-                    user.userId === userId ? { ...user, status: 'Approved' } : user
-                ),
-                seats: ride.seats - 1,
+            // Update the booking status to 'Approved'
+            const updatedBooking = {
+                status: BookingStatus.Approved,
             };
-
-            if (updatedRide.seats === 0) {
-                updatedRide.status = 'Filled';
+    
+            await databases.updateDocument(
+                process.env.NEXT_PUBLIC_DB_ID as string,
+                process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,
+                bookingId,
+                updatedBooking
+            );
+    
+            // Remove metadata fields from ride before updating
+            const { $id, $createdAt, $updatedAt, $databaseId, $collectionId, ...rideData } = ride;
+    
+            // Decrement the seats in the ride document
+            const updatedRide = {
+                ...rideData,
+                availableSeats: ride.availableSeats - 1,
+            };
+    
+            if (updatedRide.availableSeats === 0) {
+                updatedRide.status = 'filled';
             }
-
+    
             await databases.updateDocument(
                 process.env.NEXT_PUBLIC_DB_ID as string,
                 process.env.NEXT_PUBLIC_COLLECTION_ID as string,
                 rideId,
                 updatedRide
             );
+    
+            // Refresh bookings
+            setBookings((prevBookings) =>
+                prevBookings.map((booking) =>
+                    booking.$id === bookingId
+                        ? { ...booking, status: BookingStatus.Approved }
+                        : booking
+                )
+            );
+    
+            setRide(updatedRide);
+            toast.info("Ride successfully approved");
         } catch (err: any) {
             setError(err.message);
+            toast.error(err.message);
         }
     };
+    
 
     return (
         <div>
@@ -68,24 +114,25 @@ export default function RideStatus({ rideId }: { rideId: string }) {
             {ride && (
                 <div>
                     <p>Status: {ride.status}</p>
-                    <p>Seats Available: {ride.seats}</p>
+                    <p>Seats Available: {ride.availableSeats}</p>
                     <p>
-                        Joined Users:{" "}
-                        {ride.bookedBy
-                            .filter((user: any) => user.status === 'Approved')
-                            .map((user: any) => user.userId)
+                        Approved Users:{" "}
+                        {bookings
+                            .filter((booking) => booking.status === BookingStatus.Approved)
+                            .map((booking) => booking.userId)
                             .join(', ')}
                     </p>
                     <h2>Pending Requests</h2>
                     <ul>
-                        {ride.bookedBy
-                            .filter((user: any) => user.status === 'Pending')
-                            .map((user: any) => (
-                                <li key={user.userId}>
-                                    {user.userId}{" "}
-                                    <button onClick={() => approveRequest(user.userId)}>
+                        {bookings
+                            .filter((booking) => booking.status === BookingStatus.Pending)
+                            .map((booking) => (
+                                <li key={booking.$id}>
+                                    {booking.userId}{" "}
+                                    <br />
+                                    <Button onClick={() => approveRequest(booking.$id)}>
                                         Approve
-                                    </button>
+                                    </Button>
                                 </li>
                             ))}
                     </ul>

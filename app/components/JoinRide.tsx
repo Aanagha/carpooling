@@ -29,17 +29,21 @@ const JoinRide = () => {
     const loadRides = async () => {
       setIsLoading(true);
       try {
-        const response = await fetchRides(); // Fetch all rides
-        console.log("Fetched Rides:", response); // Debugging line
-       
-        console.log("Filtered Rides:", response); // Debugging line
-        setRides(response);
+          const response = await fetchRides(); // Fetch all rides
+          console.log("Fetched Rides:", response); // Debugging line
+  
+          // Filter rides to include only those with status 'active'
+          const activeRides = response.filter((ride: any) => ride.status === 'active');
+          console.log("Filtered Active Rides:", activeRides); // Debugging line
+  
+          setRides(activeRides); // Set the filtered active rides to state
       } catch (error) {
-        console.error('Failed to fetch rides:', error);
+          console.error('Failed to fetch rides:', error);
       } finally {
-        setIsLoading(false);
+          setIsLoading(false);
       }
-    };
+  };
+  
     loadRides();
   }, []);
 
@@ -53,6 +57,7 @@ const JoinRide = () => {
             r.$id === rideId ? { ...r, availableSeats: r.availableSeats - 1 } : r
         );
         setRides(updatedRides);
+        window.location.reload();
     } catch (error: any) {
         toast.error(error.message || 'Failed to join the ride.');
     }
