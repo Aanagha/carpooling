@@ -1,30 +1,20 @@
 import {  databases, ID, Query } from './appwrite';
 
-const notifyOfferer = async (message: string, offererId: string) => {
-    try {
-        await databases.createDocument(
-            process.env.NEXT_PUBLIC_DB_ID as string,
-            process.env.NEXT_PUBLIC_NOTIFICATION_COLLECTION_ID as string, // Collection ID for notifications
-            ID.unique(),
-            {
-                userId: offererId,
-                message,
-                timestamp: new Date(),
-                read: false,
-            }
-        );
-    } catch (error) {
-        console.error('Failed to send notification:', error);
-    }
-};
-
+ enum BookingStatus {
+    Pending = 'pending',
+    Approved = 'approved',
+    Rejected = 'rejected',
+    Completed = 'completed',
+    Canceled = 'canceled'
+  }
+  
 export const createRide = async (rideData: any) => {
     try {
         const response = await databases.createDocument(process.env.NEXT_PUBLIC_DB_ID as string, process.env.NEXT_PUBLIC_COLLECTION_ID as string, ID.unique(),  {
             pickupLocation: rideData.pickupLocation,
             dropoffLocation: rideData.dropoffLocation,
             departureTime: rideData.departureTime,
-            seats: rideData.seats,
+            availableSeats: rideData.availableSeats,
             vehicleType: rideData.vehicleType,
             vehicleNumber: rideData.vehicleNumber,
             status: rideData.status,
@@ -36,7 +26,14 @@ export const createRide = async (rideData: any) => {
         throw error;
     }
 };
-
+export const fetchRide = async (rideId:string) => {
+    try {
+        const response = await databases.getDocument(process.env.NEXT_PUBLIC_DB_ID as string, process.env.NEXT_PUBLIC_COLLECTION_ID as string, rideId);
+       return response.documents;
+    } catch (err:any) {
+       console.error(err)
+    }
+};
 export const fetchRides = async () => {
     try {
         // Query to get only rides with status 'active'
@@ -47,60 +44,64 @@ export const fetchRides = async () => {
             process.env.NEXT_PUBLIC_COLLECTION_ID as string,
             [activeRidesQuery] // Pass the active status query
         );
-
+console.log(response.documents)
         return response.documents;
     } catch (error) {
         console.error("Failed to fetch rides:", error);
         throw new Error("Could not fetch rides.");
     }
 };
-export const reserveRide = async (rideId: string, walletAddress: string, seats: number) => {
+
+
+export const joinRide = async (rideId: string, user: any) => {
     try {
-        // Fetch the current ride document
+        // Fetch the ride data
         const ride = await databases.getDocument(
-            process.env.NEXT_PUBLIC_DB_ID as string,
-            process.env.NEXT_PUBLIC_COLLECTION_ID as string,
+            process.env.NEXT_PUBLIC_DB_ID as string, // Your database ID
+            process.env.NEXT_PUBLIC_COLLECTION_ID as string, // Replace with your rides collection ID
             rideId
         );
 
-        // Check if the current user is the offerer
-        if (ride.offeredBy === walletAddress) {
-            throw new Error("The offerer cannot reserve their own ride.");
+        // Check if the user is the one who offered the ride
+        if (ride.offeredBy === user.$id) {
+            throw new Error('You cannot join a ride you have offered.');
         }
 
-        // Check if the ride is active
-        if (ride.status !== 'active') {
-            throw new Error('Ride is not active for reservation');
+        // Check if there are available seats
+        if (ride.availableSeats > 0) {
+            // Create a new booking in the bookings collection
+            const bookingData = {
+                rideId: rideId,
+                userId: user.$id,
+                status: BookingStatus.Approved, // Automatically approve if seats are available
+            };
+
+            const booking = await databases.createDocument(
+                process.env.NEXT_PUBLIC_DB_ID as string, // Booking database ID
+                process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,ID.unique(), // Replace with your bookings collection ID
+                bookingData
+            );
+
+            // Update the ride to decrement available seats and add the booking reference to bookedBy array
+            const updatedRide = {
+                availableSeats: ride.availableSeats - 1,
+                status: ride.availableSeats - 1 === 0 ? 'filled' : ride.status,
+                bookedBy: [...ride.bookedBy, booking.$id], // Store booking reference in bookedBy array
+            };
+console.log(updatedRide)
+            await databases.updateDocument(
+                process.env.NEXT_PUBLIC_DB_ID as string,
+                process.env.NEXT_PUBLIC_COLLECTION_ID as string,
+                rideId,
+                updatedRide
+            );
+
+            return 'Successfully joined the ride!';
+        } else {
+            throw new Error('Ride is full. Request is pending approval.');
         }
-
-        // Check if there are enough seats available
-        if (ride.bookedBy.length >= ride.seats) {
-            throw new Error('No seats available');
-        }
-
-        // Update the ride status to 'reserved' and subtract the reserved seats from the total seats
-        const updatedRide = await databases.updateDocument(
-            process.env.NEXT_PUBLIC_DB_ID as string,
-            process.env.NEXT_PUBLIC_COLLECTION_ID as string,
-            rideId,
-            {
-                status: 'reserved',
-                bookedBy: [...ride.bookedBy, walletAddress],
-                seats: ride.seats - seats
-            }
-        );
-
-        // Notify the offerer that a seat has been reserved
-        notifyOfferer('A seat has been reserved on your ride.', ride.offeredBy);
-
-        // If all seats are booked, notify the offerer
-        if (updatedRide.bookedBy.length === ride.seats) {
-            notifyOfferer('All seats on your ride have been booked.', ride.offeredBy);
-        }
-
-        console.log(updatedRide);
-        return updatedRide;
-    } catch (error: any) {
-        throw new Error(`Failed to reserve ride: ${error.message}`);
+    } catch (error) {
+        console.error('Failed to join ride:', error);
+        throw error;
     }
 };

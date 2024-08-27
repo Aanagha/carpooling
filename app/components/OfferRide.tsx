@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { createRide } from '@/lib/rides';
 import { toast } from "sonner";
-import { account, databases, getLocationList } from "@/lib/appwrite";
+import { account } from "@/lib/appwrite";
 import { RideSelect } from "./RideSelect";
 
 const OfferRide: React.FC = () => {
@@ -33,7 +33,7 @@ const OfferRide: React.FC = () => {
       pickupLocation: "",
       dropoffLocation: "",
       departureTime: "",
-      seats: 1,
+      availableSeats: 1,
       vehicleType: "",
     },
   });
@@ -41,30 +41,34 @@ const OfferRide: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const onSubmit = async (data: any) => {
     if (pickupLocation === dropoffLocation) {
-      toast.error('Pickup and drop-off locations cannot be the same.');
-      return;
+        toast.error('Pickup and drop-off locations cannot be the same.');
+        return;
     }
   
     setIsLoading(true);
     try {
-      const rideData = {
-        ...data,
-        status: "active",
-        offeredBy: user.$id,
-        seats: Number(data.seats),
-        pickupLocation: pickupLocation,
-        dropoffLocation: dropoffLocation,
-      };
-      console.log(rideData);
-      await createRide(rideData);
+        const rideData = {
+            ...data,
+            status: "active",
+            offeredBy: user.$id,
+            availableSeats: Number(data.availableSeats),  // Ensure this is availableSeats
+            pickupLocation: pickupLocation,
+            dropoffLocation: dropoffLocation,
+        };
+
+        console.log("Ride Data before sending:", rideData); // Add this line for debugging
+
+        // Call the createRide function here
+        await createRide(rideData);
    
-      toast('Ride successfully created!');
+        toast('Ride successfully created!');
     } catch (error) {
-      console.error('Failed to create ride:', error);
+        console.error('Failed to create ride:', error);
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
+
   
 
   if(isLoading){
@@ -121,9 +125,9 @@ const OfferRide: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-base mb-2 font-medium ">Number of Seats</label>
+              <label className="block text-base mb-2 font-medium ">Number of availableSeats</label>
               <Controller
-                name="seats"
+                name="availableSeats"
                 control={control}
                 render={({ field }) => (
                   <div className="flex flex-row space-x-8">
@@ -132,7 +136,7 @@ const OfferRide: React.FC = () => {
                         <input
                           {...field}
                           type="radio"
-                          name="seats"
+                          name="availableSeats"
                           value={seat}
                           className="form-radio text accent-ring "
                           required

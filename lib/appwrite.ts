@@ -67,6 +67,6 @@ const getLocationList = async (): Promise<{ name: string }[]> => {
       return []; // Return an empty array if an error occurs
     }
   };
-  
+ 
 // Export the Appwrite services and utilities
 export { client, account, databases, ID, Query, getUserRides ,getLocationList};

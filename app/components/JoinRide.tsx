@@ -1,18 +1,16 @@
-import { fetchRides } from '@/lib/rides';
+import { fetchRides, joinRide } from '@/lib/rides';
 import { useEffect, useState } from 'react';
-import { reserveRide } from '@/lib/rides';
 import { Button } from '@/components/ui/button';
-import { account } from '@/lib/appwrite';
+import { account, databases, ID } from '@/lib/appwrite';
 import { toast } from 'sonner';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Car, Clock, Terminal, Users } from 'lucide-react';
 
-const RideList = () => {
+const JoinRide = () => {
   const [rides, setRides] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
-  const [selectedSeats, setSelectedSeats] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,8 +30,10 @@ const RideList = () => {
       setIsLoading(true);
       try {
         const response = await fetchRides(); // Fetch all rides
-        const filteredRides = response.filter((ride) => ride.seats > 0); // Filter out rides with 0 seats
-        setRides(filteredRides);
+        console.log("Fetched Rides:", response); // Debugging line
+       
+        console.log("Filtered Rides:", response); // Debugging line
+        setRides(response);
       } catch (error) {
         console.error('Failed to fetch rides:', error);
       } finally {
@@ -44,22 +44,19 @@ const RideList = () => {
   }, []);
 
   const handleReserveRide = async (rideId: string) => {
-    if (!user) {
-      toast.info('Please login first to reserve a ride.');
-      return;
-    }
-    if (!selectedSeats) {
-      toast.info('Please select the number of seats to reserve.');
-      return;
-    }
     try {
-      await reserveRide(rideId, user.$id, selectedSeats);
-      toast.success(`Ride successfully reserved for ${selectedSeats} seats!`);
+        const message = await joinRide(rideId, user);
+        toast.success(message);
+
+        // Update the local state to reflect the changes in available seats
+        const updatedRides = rides.map((r) =>
+            r.$id === rideId ? { ...r, availableSeats: r.availableSeats - 1 } : r
+        );
+        setRides(updatedRides);
     } catch (error: any) {
-      console.error(error.message);
-      toast.error(error.message);
+        toast.error(error.message || 'Failed to join the ride.');
     }
-  };
+};
 
   return (
     <div className="container mx-auto py-6 px-4 max-w-3xl">
@@ -70,9 +67,9 @@ const RideList = () => {
       ) : (
         <ScrollArea>
           <h1 className="text-3xl font-bold mb-8 text-center">Available Rides</h1>
-          {rides.filter((ride) => ride.status === 'active').length > 0 ? (
+          {rides.length > 0 ? (
             <div className="grid gap-8">
-              {rides.filter((ride) => ride.status === 'active').map((ride) => (
+              {rides.map((ride) => (
                 <div key={ride.$id} className="bg-white dark:bg-gray-800 rounded-xl blur-background bg-white/20 border border-black overflow-hidden transition-all hover:shadow-xl">
                   <div className="p-6">
                     <div className="flex justify-between items-center mb-4">
@@ -96,27 +93,10 @@ const RideList = () => {
                       </p>
                       <p className="flex items-center">
                         <Users className="w-4 h-4 mr-2" />
-                        {ride.seats} seats available
+                        {ride.availabeSeats} seats available
                       </p>
                     </div>
-                    <div className="mt-6">
-                      <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Select number of seats:</p>
-                      <div className="flex flex-wrap gap-3">
-                        {Array.from({ length: ride.seats }, (_, index) => index + 1).map((seat) => (
-                          <label key={seat} className="inline-flex items-center">
-                            <input
-                              type="radio"
-                              name={`seats-${ride.$id}`}
-                              value={seat}
-                              onChange={() => setSelectedSeats(seat)}
-                              className="form-radio text-blue-600 h-4 w-4"
-                              required
-                            />
-                            <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">{seat}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
+           
                     <Button 
                       onClick={() => handleReserveRide(ride.$id)} 
                       className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 ease-in-out"
@@ -142,4 +122,4 @@ const RideList = () => {
   );
 };
 
-export default RideList;
+export default JoinRide;

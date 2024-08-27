@@ -4,6 +4,7 @@ import BestPractises from "./components/BestPractises";
 import Howitworks from "./components/Howitworks";
 import Hero from "./components/Hero";
 import Header from "./components/Header";
+import RideStatus from "./components/RideStatus";
 
 
 export default function Home() {
@@ -14,7 +15,7 @@ export default function Home() {
      
 <Header/>
       <main>
-      
+     
      <Hero/>
        
     

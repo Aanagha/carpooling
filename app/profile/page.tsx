@@ -92,7 +92,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-lg p-4">
+    <div className="mx-auto w-full max-w-lg  p-4">
       <Button className='mb-4 hover:border-2' variant="link"><ArrowLeft className='mr-2'/><a href="/">BACK</a></Button>
 
       {user ? (

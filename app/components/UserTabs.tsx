@@ -6,7 +6,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import OfferRide from "./OfferRide"
-import RideList from "./RidesList"
+import RideList from "./JoinRide"
 
 export function UserTabs() {
   return (
