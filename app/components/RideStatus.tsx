@@ -5,7 +5,6 @@ import { BookingStatus } from '@/lib/rides';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 
-
 export default function RideStatus({ rideId }: { rideId: any }) {
     const [ride, setRide] = useState<any>(null);
     const [bookings, setBookings] = useState<any[]>([]);
@@ -24,13 +23,25 @@ export default function RideStatus({ rideId }: { rideId: any }) {
                 // Fetch bookings for this ride
                 if (response.bookedBy && response.bookedBy.length > 0) {
                     const bookingResponses = await Promise.all(
-                        response.bookedBy.map((bookingId: string) =>
-                            databases.getDocument(
+                        response.bookedBy.map(async (bookingId: string) => {
+                            const booking = await databases.getDocument(
                                 process.env.NEXT_PUBLIC_DB_ID as string,
                                 process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,
                                 bookingId
-                            )
-                        )
+                            );
+
+                            // Fetch the user's details based on userId
+                            const user = await databases.getDocument(
+                                process.env.NEXT_PUBLIC_DB_ID as string, // Replace with your user database ID if different
+                                process.env.NEXT_PUBLIC_USERS_COLLECTION_ID as string, // Replace with your users collection ID
+                                booking.userId
+                            );
+
+                            return {
+                                ...booking,
+                                userName: user.name, // Assuming the user document has a 'name' field
+                            };
+                        })
                     );
                     setBookings(bookingResponses);
                 }
@@ -105,7 +116,6 @@ export default function RideStatus({ rideId }: { rideId: any }) {
             toast.error(err.message);
         }
     };
-    
 
     return (
         <div>
@@ -119,7 +129,7 @@ export default function RideStatus({ rideId }: { rideId: any }) {
                         Approved Users:{" "}
                         {bookings
                             .filter((booking) => booking.status === BookingStatus.Approved)
-                            .map((booking) => booking.userId)
+                            .map((booking) => booking.userName) // Show user's name
                             .join(', ')}
                     </p>
                     <h2>Pending Requests</h2>
@@ -128,7 +138,7 @@ export default function RideStatus({ rideId }: { rideId: any }) {
                             .filter((booking) => booking.status === BookingStatus.Pending)
                             .map((booking) => (
                                 <li key={booking.$id}>
-                                    {booking.userId}{" "}
+                                    {booking.userName} {/* Show user's name */}
                                     <br />
                                     <Button onClick={() => approveRequest(booking.$id)}>
                                         Approve
