@@ -7,6 +7,7 @@ import { Clock, MapPin, CheckCircle } from 'lucide-react';
 const PendingRideStatus = ({ userId }: { userId: string }) => {
     const [pendingRides, setPendingRides] = useState<any[]>([]);
     const [approvedRide, setApprovedRide] = useState<any | null>(null);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -62,6 +63,8 @@ const PendingRideStatus = ({ userId }: { userId: string }) => {
                 }
             } catch (err: any) {
                 setError(err.message);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -69,13 +72,33 @@ const PendingRideStatus = ({ userId }: { userId: string }) => {
     }, [userId]);
 
     // Return null if there are no rides to display
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center p-4">
+                <div className="bg-gradient-to-br from-yellow-400 to-orange-400 rounded-xl shadow-lg p-6 md:p-8 max-w-full md:max-w-lg w-full">
+                    <div className="animate-pulse">
+                        <div className="flex items-center mb-4">
+                            <div className="bg-gray-300 rounded-full h-6 w-6 mr-3" />
+                            <div className="h-6 bg-gray-300 rounded w-32" />
+                        </div>
+                        <div className="h-5 bg-gray-300 rounded w-full mb-4" />
+                        <div className="space-y-4">
+                            <div className="h-5 bg-gray-300 rounded w-full" />
+                            <div className="h-5 bg-gray-300 rounded w-full" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     if (pendingRides.length === 0 && !approvedRide) {
         return null;
     }
 
     return (
         <div className="flex justify-center items-center p-4">
-            <div className=" bg-gradient-to-br from-yellow-400 to-orange-400 rounded-xl shadow-lg p-6 md:p-8 max-w-full md:max-w-lg w-full transition-transform transform hover:scale-105 hover:shadow-2xl">
+            <div className="bg-gradient-to-br from-yellow-400 to-orange-400 rounded-xl shadow-lg p-6 md:p-8 max-w-full md:max-w-lg w-full transition-transform transform hover:scale-105 hover:shadow-2xl">
                 {approvedRide && (
                     <div className="mb-6">
                         <div className="flex items-center mb-4">

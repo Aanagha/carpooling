@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { DrawerDemo } from './DrawerDemo';
-import { Loader } from 'lucide-react';
 import { account, databases, Query } from '@/lib/appwrite';
 import { Cover } from '@/components/ui/cover';
 import { Button } from '@/components/ui/button';
@@ -10,11 +9,13 @@ import { UserTabs } from './UserTabs';
 import Register from './Register';
 import RideStatus from './RideStatus';
 import PendingRideStatus from './PendingRideStatus';
+import { BookingStatus } from '@/lib/rides';
 
 const Hero = () => {
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [activeRide, setActiveRide] = useState<any>(null);
+    const [hasPendingRides, setHasPendingRides] = useState(false);
 
     useEffect(() => {
         const fetchUserAndRides = async () => {
@@ -36,6 +37,20 @@ const Hero = () => {
                     if (offeredRides.documents.length > 0) {
                         setActiveRide(offeredRides.documents[0]);  // Assuming there's only one active ride
                     }
+
+                    // Check if the user has any pending rides
+                    const pendingRides = await databases.listDocuments(
+                        process.env.NEXT_PUBLIC_DB_ID as string,
+                        process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,
+                        [
+                            Query.equal('userId', userData.$id),
+                            Query.equal('status', BookingStatus.Pending)
+                        ]
+                    );
+
+                    if (pendingRides.documents.length > 0) {
+                        setHasPendingRides(true);
+                    }
                 }
             } catch (error) {
                 console.error("User not logged in or failed to fetch rides:", error);
@@ -50,7 +65,15 @@ const Hero = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <Loader className="animate-spin h-8 w-8 text-blue-600" />
+                <div className="w-full max-w-md mx-auto p-4">
+                    <div className="animate-pulse">
+                        <div className="h-8 bg-gray-300 rounded w-3/4 mb-4" />
+                        <div className="h-6 bg-gray-300 rounded w-1/2 mb-6" />
+                        <div className="h-48 bg-gray-300 rounded-lg mb-4" />
+                        <div className="h-6 bg-gray-300 rounded w-3/4 mb-4" />
+                        <div className="h-6 bg-gray-300 rounded w-1/2" />
+                    </div>
+                </div>
             </div>
         );
     }
@@ -124,7 +147,8 @@ const Hero = () => {
                         <p className='text-center text-lg text-gray-600 mb-6'>
                             Hop in ! Connect with your next carpool
                         </p>
-                        {/* <UserTabs /> */}
+                        
+                        {!hasPendingRides && <UserTabs />}
                         <PendingRideStatus userId={user.$id} />
                     </div>
                 )}

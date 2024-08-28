@@ -9,6 +9,7 @@ import { CheckCircle, Clock, User, Users } from 'lucide-react';
 export default function RideStatus({ rideId }: { rideId: any }) {
     const [ride, setRide] = useState<any>(null);
     const [bookings, setBookings] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -48,6 +49,8 @@ export default function RideStatus({ rideId }: { rideId: any }) {
                 }
             } catch (err: any) {
                 setError('Fetch error: ' + err.message);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -120,21 +123,51 @@ export default function RideStatus({ rideId }: { rideId: any }) {
     // Check if the current time is before the departure time
     const isBeforeDeparture = ride ? new Date().getTime() < new Date(ride.departureTime).getTime() : false;
 
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen  p-4">
+                <div className="backdrop-blur-2xl bg-white/40 rounded-xl shadow-lg p-6 md:p-8 max-w-full md:max-w-lg w-full">
+                    <div className="animate-pulse">
+                        <div className="flex items-center mb-6">
+                            <div className="bg-gray-300 rounded-full h-6 w-6 mr-3" />
+                            <div className="h-6 bg-gray-300 rounded w-32" />
+                        </div>
+                        <div className="flex items-center mb-4">
+                            <div className="bg-gray-300 rounded-full h-5 w-5 mr-2" />
+                            <div className="h-5 bg-gray-300 rounded w-48" />
+                        </div>
+                        <div className="flex items-center mb-6">
+                            <div className="bg-gray-300 rounded-full h-5 w-5 mr-2" />
+                            <div className="h-5 bg-gray-300 rounded w-40" />
+                        </div>
+                        <div className="h-5 bg-gray-300 rounded w-36 mb-4" />
+                        <div className="space-y-4">
+                            <div className="h-5 bg-gray-300 rounded w-full" />
+                            <div className="h-5 bg-gray-300 rounded w-full" />
+                            <div className="h-5 bg-gray-300 rounded w-full" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-green-600 to-green-400 p-4">
-            <div className="backdrop-blur-2xl bg-white/40 rounded-xl shadow-lg p-6 md:p-8 max-w-full md:max-w-lg w-full transition-transform transform hover:scale-105 hover:shadow-2xl">
+        <div className="flex justify-center items-center my-[30%] p-4">
+            <div className="backdrop-blur-2xl border shadow-2xl rounded-xl  p-6 md:p-8 max-w-full md:max-w-lg w-full transition-transform transform hover:scale-105 hover:shadow-2xl">
                 <div className="flex items-center mb-6">
                     <Users className="text-blue-600 h-6 w-6 mr-3" />
-                    <h1 className="text-xl md:text-2xl font-bold text-gray-800">Ride Status</h1>
+                    <h1 className="text-xl md:text-2xl font-bold text-gray-600">Ride Status</h1>
                 </div>
                 {error && <p className="text-red-500 mb-4">{error}</p>}
                 {ride && isBeforeDeparture && (
                     <div>
-                        <div className="flex items-center mb-4">
-                            <Clock className="text-gray-600 h-5 w-5 mr-2" />
-                            <p className="text-md md:text-lg font-semibold text-gray-600">
-                                Status: <span className="text-gray-900">{ride.status}</span>
-                            </p>
+                        <div className="flex items-center mb-4 fixed top-4 right-4">
+                           
+                            <span className="text-gray-800 bg-green-100 px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                                                       
+                                                        {ride.status}
+                                                    </span>
                         </div>
                         <div className="flex items-center mb-6">
                             <CheckCircle className="text-blue-600 h-5 w-5 mr-2" />
@@ -149,7 +182,7 @@ export default function RideStatus({ rideId }: { rideId: any }) {
                                 .map((booking) => (
                                     <li key={booking.$id} className="text-gray-800 flex items-center">
                                         <User className="text-gray-600 h-4 w-4 mr-2" />
-                                        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                                        <span className="bg-red-100  px-3 py-1 rounded-full text-sm font-medium">
                                             {booking.userName}
                                         </span>
                                     </li>
