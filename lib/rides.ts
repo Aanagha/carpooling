@@ -70,9 +70,10 @@ export const joinRide = async (rideId: string, user: any) => {
 
         // Check if there are available seats
         if (ride.availableSeats > 0) {
+            console.log(user)
             // Create a new booking in the bookings collection with status 'Pending'
             const bookingData = {
-                name:user.username,
+                name:user.name || user.username,
                 rideId: rideId,
                 userId: user.$id,
                 status: BookingStatus.Pending, // Set status to Pending for approval

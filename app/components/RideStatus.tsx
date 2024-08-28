@@ -9,17 +9,18 @@ export default function RideStatus({ rideId }: { rideId: any }) {
     const [ride, setRide] = useState<any>(null);
     const [bookings, setBookings] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
-
     useEffect(() => {
         const fetchRide = async () => {
             try {
+                console.log("Fetching ride with ID:", rideId);
+    
                 const response = await databases.getDocument(
                     process.env.NEXT_PUBLIC_DB_ID as string,
                     process.env.NEXT_PUBLIC_COLLECTION_ID as string,
                     rideId
                 );
                 setRide(response);
-
+    
                 // Fetch bookings for this ride
                 if (response.bookedBy && response.bookedBy.length > 0) {
                     const bookingResponses = await Promise.all(
@@ -29,29 +30,29 @@ export default function RideStatus({ rideId }: { rideId: any }) {
                                 process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,
                                 bookingId
                             );
-
+    
                             // Fetch the user's details based on userId
                             const user = await databases.getDocument(
-                                process.env.NEXT_PUBLIC_DB_ID as string, // Replace with your user database ID if different
-                                process.env.NEXT_PUBLIC_USERS_COLLECTION_ID as string, // Replace with your users collection ID
+                                process.env.NEXT_PUBLIC_DB_ID as string, // Ensure this is the correct database ID
+                                process.env.NEXT_PUBLIC_USER_COLLECTION_ID as string, // Ensure this is the correct collection ID
                                 booking.userId
                             );
-
+    console.table(user)
                             return {
                                 ...booking,
-                                userName: user.name, // Assuming the user document has a 'name' field
+                                userName: user.username, // Assuming the user document has a 'name' field
                             };
                         })
                     );
                     setBookings(bookingResponses);
                 }
             } catch (err: any) {
-                setError(err.message);
+                setError('Fetch error: ' + err.message);
             }
         };
-
+    
         fetchRide();
-
+    
         const unsubscribe = client.subscribe(
             `databases.${process.env.NEXT_PUBLIC_DB_ID}.collections.${process.env.NEXT_PUBLIC_COLLECTION_ID}.documents.${rideId}`,
             (response) => {
@@ -60,11 +61,12 @@ export default function RideStatus({ rideId }: { rideId: any }) {
                 }
             }
         );
-
+    
         return () => {
             unsubscribe();
         };
     }, [rideId]);
+    
 
     const approveRequest = async (bookingId: string) => {
         try {
@@ -80,12 +82,11 @@ export default function RideStatus({ rideId }: { rideId: any }) {
                 updatedBooking
             );
     
-            // Remove metadata fields from ride before updating
-            const { $id, $createdAt, $updatedAt, $databaseId, $collectionId, ...rideData } = ride;
+          
     
             // Decrement the seats in the ride document
             const updatedRide = {
-                ...rideData,
+                ...ride,
                 availableSeats: ride.availableSeats - 1,
             };
     
@@ -129,7 +130,7 @@ export default function RideStatus({ rideId }: { rideId: any }) {
                         Approved Users:{" "}
                         {bookings
                             .filter((booking) => booking.status === BookingStatus.Approved)
-                            .map((booking) => booking.userName) // Show user's name
+                            .map((booking) => booking.name) // Show user's name
                             .join(', ')}
                     </p>
                     <h2>Pending Requests</h2>
