@@ -9,12 +9,12 @@ import Image from "next/image";
 import { UserTabs } from './UserTabs';
 import Register from './Register';
 import RideStatus from './RideStatus';
-import PendingRideStatus from './PendingRideStatus'; // Import the new component
+import PendingRideStatus from './PendingRideStatus';
 
 const Hero = () => {
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const [activeRideId, setActiveRideId] = useState<string | null>(null);
+    const [activeRide, setActiveRide] = useState<any>(null);
 
     useEffect(() => {
         const fetchUserAndRides = async () => {
@@ -34,7 +34,7 @@ const Hero = () => {
                     );
 
                     if (offeredRides.documents.length > 0) {
-                        setActiveRideId(offeredRides.documents[0].$id);  // Assuming there's only one active ride
+                        setActiveRide(offeredRides.documents[0]);  // Assuming there's only one active ride
                     }
                 }
             } catch (error) {
@@ -55,10 +55,35 @@ const Hero = () => {
         );
     }
 
+    const renderComponentBasedOnStatus = () => {
+        if (!activeRide) return null;
+
+        switch (activeRide.status) {
+            case 'active':
+                return <RideStatus rideId={activeRide.$id} />;
+            case 'pending':
+                return <PendingRideStatus userId={user.$id} />;
+            case 'filled':
+                return (
+                    <div className="flex justify-center items-center h-screen">
+                        <h1 className="text-3xl">This ride is filled.</h1>
+                    </div>
+                );
+            case 'completed':
+                return (
+                    <div className="flex justify-center items-center h-screen">
+                        <h1 className="text-3xl">This ride is completed.</h1>
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
         <>
-            {activeRideId ? (
-                <RideStatus rideId={activeRideId} />
+            {activeRide ? (
+                renderComponentBasedOnStatus()
             ) : (
                 <>
                 {!user ? (
@@ -99,8 +124,8 @@ const Hero = () => {
                         <p className='text-center text-lg text-gray-600 mb-6'>
                             Hop in ! Connect with your next carpool
                         </p>
-                        <UserTabs />
-                        <PendingRideStatus userId={user.$id} /> {/* Render the PendingRideStatus component */}
+                        {/* <UserTabs /> */}
+                        <PendingRideStatus userId={user.$id} />
                     </div>
                 )}
                 </> 
