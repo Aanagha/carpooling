@@ -7,9 +7,9 @@ const Howitworks = () => {
       <h2 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-16" >How It Works</h2>
       <div className="sm:justify-between p-2 gap-8 flex flex-col lg:flex-row justify-center items-center ">
         {[
-          { title: "Offer a Ride", description: "Fill out the ride details and offer your ride to others.", bg:'bg-white' },
-          { title: "Join a Ride", description: "Search for available rides and book your seat.", bg:'bg-[#CBF08E]' },
-          { title: "Enjoy the Ride", description: "Meet your driver, hop in, and enjoy your journey.", bg:'bg-gray-200' }
+          { title: "Register", description: "Create an account in minutes using your email.", bg:'bg-white' },
+          { title: "Find a Ride", description: " Browse available carpool options or  Offer a ride: post your own ride.", bg:'bg-[#CBF08E]' },
+          { title: "Reserve  and Confirm", description: "Use our in-app coordinate with your carpool buddies, confirm the ride, and set pick-up locations.", bg:'bg-gray-200' }
         ].map((data, index) => (
    
 <div key={index}

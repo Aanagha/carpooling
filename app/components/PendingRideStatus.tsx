@@ -22,7 +22,7 @@ const PendingRideStatus = ({ userId }: { userId: string }) => {
                         Query.equal('status', BookingStatus.Pending),
                     ]
                 );
-
+console.log(pendingBookings)
                 if (pendingBookings.documents.length > 0) {
                     const ridePromises = pendingBookings.documents.map((booking) =>
                         databases.getDocument(

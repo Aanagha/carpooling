@@ -1,5 +1,6 @@
 
-import * as React from "react";
+"use client"
+import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { createRide } from '@/lib/rides';
@@ -8,80 +9,50 @@ import { account } from "@/lib/appwrite";
 import { RideSelect } from "./RideSelect";
 
 const OfferRide: React.FC = () => {
-  const [user, setUser] = React.useState<any>(null);
+  const [user, setUser] = useState<any>(null);
+  const [pickupLocation, setPickupLocation] = useState<string>('');
+  const [dropoffLocation, setDropoffLocation] = useState<string>('');
 
-  const [pickupLocation, setPickupLocation] = React.useState<string>('');
-  const [dropoffLocation, setDropoffLocation] = React.useState<string>('');
-
-
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchUser = async () => {
       try {
         const userData = await account.get();
         setUser(userData);
-        
       } catch (error) {
         console.error("User not logged in:", error);
       }
     };
-
     fetchUser();
   }, []);
 
   const { handleSubmit, control } = useForm({
     defaultValues: {
-      pickupLocation: "",
-      dropoffLocation: "",
       departureTime: "",
       availableSeats: 1,
       vehicleType: "",
     },
   });
 
-  const [isLoading, setIsLoading] = React.useState(false);
   const onSubmit = async (data: any) => {
     if (pickupLocation === dropoffLocation) {
-        toast.error('Pickup and drop-off locations cannot be the same.');
-        return;
+      toast.error('Pickup and drop-off locations cannot be the same.');
+      return;
     }
-  
-    setIsLoading(true);
+
     try {
-        const rideData = {
-            ...data,
-            status: "active",
-            offeredBy: user.$id,
-            availableSeats: Number(data.availableSeats),  // Ensure this is availableSeats
-            pickupLocation: pickupLocation,
-            dropoffLocation: dropoffLocation,
-        };
-
-        console.log("Ride Data before sending:", rideData); // Add this line for debugging
-
-        // Call the createRide function here
-        await createRide(rideData);
-   
-        toast('Ride successfully created!');
+      const rideData = {
+        ...data,
+        status: "active",
+        offeredBy: user.$id,
+        pickupLocation,
+        dropoffLocation,
+      };
+      await createRide(rideData);
+      toast('Ride successfully created!');
     } catch (error) {
-        console.error('Failed to create ride:', error);
-    } finally {
-        setIsLoading(false);
+      console.error('Failed to create ride:', error);
     }
-};
-
-  
-
-  if(isLoading){
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        <p>Loading...</p>
-      </div>
-    );
-  }
+  };
 
   return (
     <div className="mx-auto w-full max-w-lg px-4 sm:px-2 lg:px-2 mt-6 ">
@@ -194,3 +165,4 @@ const OfferRide: React.FC = () => {
 };
 
 export default OfferRide;
+
