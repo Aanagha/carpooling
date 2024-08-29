@@ -1,11 +1,11 @@
 import React from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone } from 'lucide-react';
 
 const ContactUs = () => {
   return (
     <div className="bg-[#313638] text-gray-200 antialiased min-h-screen">
       {/* Header */}
-      <header className=" py-6 ">
+      <header className="py-6">
         <div className="container mx-auto px-6">
           <h1 className="text-4xl font-semibold text-center">Contact Us</h1>
         </div>
@@ -25,10 +25,9 @@ const ContactUs = () => {
               <Phone className="h-6 w-6 text-yellow-500 mr-4" />
               <span className="text-lg text-gray-300">7558757963</span>
             </div>
-          
           </div>
           <div className="text-gray-400">
-            We're here to help and answer any question you might have. We look forward to hearing from you!
+            We&apos;re here to help and answer any question you might have. We look forward to hearing from you!
           </div>
         </section>
 
@@ -68,21 +67,15 @@ const ContactUs = () => {
             </div>
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-blue-400  text-gray-800 font-semibold rounded-md shadow-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600"
+              className="w-full py-2 px-4 bg-blue-400 text-gray-800 font-semibold rounded-md shadow-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600"
             >
               Send Message
             </button>
           </form>
         </section>
       </main>
-
-      {/* Footer */}
-      {/* <footer className=" py-4 text-center text-gray-500">
-        &copy; [Your Company Name] [Current Year]. All rights reserved.
-      </footer> */}
     </div>
   );
 };
 
 export default ContactUs;
-``

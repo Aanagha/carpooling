@@ -32,7 +32,7 @@ export const Cover = ({
       );
       setBeamPositions(positions);
     }
-  }, [ref.current]);
+  }, [ref]);
 
   return (
     <div
