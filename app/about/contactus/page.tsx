@@ -1,7 +1,47 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
+import { databases, ID } from '@/lib/appwrite';
 import { Mail, Phone } from 'lucide-react';
+import { toast } from 'sonner';
 
 const ContactUs = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    setIsSubmitting(true);
+
+    try {
+      const feedbackData = {
+        name,
+        email,
+        message,
+      };
+
+      await databases.createDocument(
+        process.env.NEXT_PUBLIC_DB_ID as string, // Replace with your database ID
+        process.env.NEXT_PUBLIC_FEEDBACK_COLLECTION_ID as string, // Replace with your collection ID
+        ID.unique(),
+        feedbackData
+      );
+
+      toast.success('Your message has been sent successfully!');
+      setName('');
+      setEmail('');
+      setMessage('');
+    } catch (error: any) {
+      console.error('Failed to submit feedback:', error);
+      toast.error('Failed to send your message. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="bg-[#313638] text-gray-200 antialiased min-h-screen">
       {/* Header */}
@@ -34,15 +74,18 @@ const ContactUs = () => {
         {/* Contact Form */}
         <section className="p-6 bg-[#42474a] rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-6 text-gray-100">Send Us a Message</h2>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label htmlFor="name" className="block text-sm font-medium text-gray-300">Your Name</label>
               <input
                 type="text"
                 id="name"
                 name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="mt-1 block w-full px-4 py-2 bg-[#313638] border border-gray-600 rounded-md text-gray-200 focus:border-yellow-500 focus:ring-yellow-500"
                 placeholder="Enter your name"
+                required
               />
             </div>
             <div className="mb-4">
@@ -51,8 +94,11 @@ const ContactUs = () => {
                 type="email"
                 id="email"
                 name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 block w-full px-4 py-2 bg-[#313638] border border-gray-600 rounded-md text-gray-200 focus:border-yellow-500 focus:ring-yellow-500"
                 placeholder="Enter your email"
+                required
               />
             </div>
             <div className="mb-4">
@@ -60,16 +106,20 @@ const ContactUs = () => {
               <textarea
                 id="message"
                 name="message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 rows={4}
                 className="mt-1 block w-full px-4 py-2 bg-[#313638] border border-gray-600 rounded-md text-gray-200 focus:border-yellow-500 focus:ring-yellow-500"
                 placeholder="Enter your message"
+                required
               />
             </div>
             <button
               type="submit"
+              disabled={isSubmitting}
               className="w-full py-2 px-4 bg-blue-400 text-gray-800 font-semibold rounded-md shadow-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600"
             >
-              Send Message
+              {isSubmitting ? 'Sending...' : 'Send Message'}
             </button>
           </form>
         </section>

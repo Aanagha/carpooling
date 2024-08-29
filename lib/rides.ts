@@ -113,3 +113,17 @@ export const joinRide = async (rideId: string, user: any) => {
         throw error;
     }
 };
+
+export const getRideDetails = async (rideId: string) => {
+  try {
+    const ride = await databases.getDocument(
+      process.env.NEXT_PUBLIC_DB_ID as string, // Replace with your database ID
+      process.env.NEXT_PUBLIC_COLLECTION_ID as string, // Replace with your collection ID
+      rideId
+    );
+    return ride;
+  } catch (error) {
+    console.error('Error fetching ride details:', error);
+    throw new Error('Could not fetch ride details');
+  }
+};

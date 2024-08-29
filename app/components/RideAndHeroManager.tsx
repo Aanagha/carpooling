@@ -1,9 +1,11 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-import { account, client, databases, Query } from '@/lib/appwrite';
-import RideStatus from './RideStatus';
-import Hero from './Hero';
-import { BookingStatus } from '@/lib/rides';
+"use client";
+import React, { useEffect, useState } from "react";
+import { account, client, databases, Query } from "@/lib/appwrite";
+import RideStatus from "./RideStatus";
+import Hero from "./Hero";
+import { BookingStatus } from "@/lib/rides";
+import ApprovedBooking from "./ApprovedBooking";
+import PendingBooking from "./PendingBooking";
 
 interface User {
   $id: string;
@@ -14,7 +16,7 @@ const RideAndHeroManager: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeRide, setActiveRide] = useState<any>(null);
-  const [pendingBooking, setPendingBooking] = useState<any>(null);
+  const [booking, setBooking] = useState<any>(null);
 
   useEffect(() => {
     const fetchUserAndRides = async () => {
@@ -27,38 +29,42 @@ const RideAndHeroManager: React.FC = () => {
           const offeredRides = await databases.listDocuments(
             process.env.NEXT_PUBLIC_DB_ID as string,
             process.env.NEXT_PUBLIC_COLLECTION_ID as string,
-            [Query.equal('offeredBy', userData.$id)]
+            [Query.equal("offeredBy", userData.$id)]
           );
-console.log(offeredRides)
+
           if (offeredRides.documents.length > 0) {
             const ride = offeredRides.documents[0];
             const currentTime = new Date().getTime();
             const departureTime = new Date(ride.departureTime).getTime();
 
-            if (currentTime >= departureTime && ride.status !== 'completed') {
-              ride.status = 'completed';
+            if (currentTime >= departureTime && ride.status !== "completed") {
+              ride.status = "completed";
               await databases.updateDocument(
                 process.env.NEXT_PUBLIC_DB_ID as string,
                 process.env.NEXT_PUBLIC_COLLECTION_ID as string,
                 ride.$id,
-                { status: 'completed' }
+                { status: "completed" }
               );
             }
 
             setActiveRide(ride);
           } else {
-            // Check if the user has any pending bookings
-            const pendingBookings = await databases.listDocuments(
+            // Check if the user has any bookings
+            const userBookings = await databases.listDocuments(
               process.env.NEXT_PUBLIC_DB_ID as string,
               process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,
-              [
-                Query.equal('userId', userData.$id),
-                Query.equal('status', BookingStatus.Pending)
-              ]
+              [Query.equal("userId", userData.$id)]
             );
-console.log(pendingBookings)
-            if (pendingBookings.documents.length > 0) {
-              setPendingBooking(pendingBookings.documents[0]);
+
+            if (userBookings.documents.length > 0) {
+              const bookingData = userBookings.documents[0];
+              if (bookingData.status === BookingStatus.Rejected) {
+                // If the booking is rejected, don't set it, and redirect to Hero
+                setBooking(null);
+                return;
+              } else {
+                setBooking(bookingData);
+              }
             }
           }
         }
@@ -74,7 +80,11 @@ console.log(pendingBookings)
     const unsubscribe = client.subscribe(
       `databases.${process.env.NEXT_PUBLIC_DB_ID}.collections.${process.env.NEXT_PUBLIC_COLLECTION_ID}.documents`,
       (response) => {
-        if (response.events.includes("databases.*.collections.*.documents.*.update")) {
+        if (
+          response.events.includes(
+            "databases.*.collections.*.documents.*.update"
+          )
+        ) {
           fetchUserAndRides();
         }
       }
@@ -105,10 +115,12 @@ console.log(pendingBookings)
     return <RideStatus ride={activeRide} user={user} />;
   }
 
-  if (pendingBooking) {
-    return <RideStatus ride={pendingBooking} user={user} />;
+  if (booking && booking.status === BookingStatus.Approved) {
+    return <ApprovedBooking booking={booking}  />;
   }
-
+  if (booking && booking.status === BookingStatus.Pending) {
+    return <PendingBooking booking={booking}  />;
+  }
   return <Hero user={user} />;
 };
 

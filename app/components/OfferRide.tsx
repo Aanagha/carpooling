@@ -1,5 +1,3 @@
-
-"use client"
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -46,6 +44,7 @@ const OfferRide: React.FC = () => {
         offeredBy: user.$id,
         pickupLocation,
         dropoffLocation,
+        availableSeats: Number(data.availableSeats), // Ensure availableSeats is a number
       };
       await createRide(rideData);
       toast('Ride successfully created!');
@@ -77,7 +76,7 @@ const OfferRide: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="departureTime" className="block text-base mb-2 font-medium">Departure Time</label>
+              <label htmlFor="departureTime" className="block text-base text-left mb-4 font-medium">Departure Time</label>
               <Controller
                 name="departureTime"
                 control={control}
@@ -96,20 +95,20 @@ const OfferRide: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-base mb-2 font-medium ">Number of availableSeats</label>
+              <label className="block text-base text-left mb-4 font-medium">Number of Available Seats</label>
               <Controller
                 name="availableSeats"
                 control={control}
                 render={({ field }) => (
                   <div className="flex flex-row space-x-8">
                     {[1, 2, 3].map((seat) => (
-                      <label key={seat} className="inline-flex items-center space-x-4   blur-background bg-white/10 rounded-md p-2 border border-gray-300 shadow-sm cursor-pointer hover:border-blue-500 w-1/3 text-center">
+                      <label key={seat} className="inline-flex items-center space-x-4 blur-background bg-white/10 rounded-md p-2 border border-gray-300 shadow-sm cursor-pointer hover:border-blue-500 w-1/3 text-center">
                         <input
                           {...field}
                           type="radio"
                           name="availableSeats"
                           value={seat}
-                          className="form-radio text accent-ring "
+                          className="form-radio accent-ring"
                           required
                         />
                         <span className="text-md font-medium text-background">{seat}</span>
@@ -121,7 +120,7 @@ const OfferRide: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-base mb-2 font-medium ">Vehicle Type</label>
+              <label className="block text-base text-left mb-4 font-medium">Vehicle Type</label>
               <Controller
                 name="vehicleType"
                 control={control}
@@ -144,7 +143,7 @@ const OfferRide: React.FC = () => {
                         type="radio"
                         name="vehicleType"
                         value="cab"
-                        className="form-radio accent-black "
+                        className="form-radio accent-black"
                         required
                       />
                       <span className="text-lg font-medium">Cab</span>
@@ -155,9 +154,9 @@ const OfferRide: React.FC = () => {
             </div>
           </div>
 
-          <Button type="submit"  className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-gray-200">
-              Offer Ride
-            </Button>
+          <Button type="submit" className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-gray-200">
+            Offer Ride
+          </Button>
         </form>
       </div>
     </div>
@@ -165,4 +164,3 @@ const OfferRide: React.FC = () => {
 };
 
 export default OfferRide;
-

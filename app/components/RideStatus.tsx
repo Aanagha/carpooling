@@ -1,10 +1,11 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { client, databases } from '@/lib/appwrite';
-import { BookingStatus,  } from '@/lib/rides';
+import { BookingStatus } from '@/lib/rides';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { User, Clock } from 'lucide-react';
+import { User } from 'lucide-react';
+import { adjustTime } from '@/lib/utils';
 
 interface RideStatusProps {
   ride: any;
@@ -100,6 +101,32 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
     }
   };
 
+  const rejectRequest = async (bookingId: string) => {
+    try {
+      const updatedBooking = { status: BookingStatus.Rejected };
+
+      await databases.updateDocument(
+        process.env.NEXT_PUBLIC_DB_ID as string,
+        process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,
+        bookingId,
+        updatedBooking
+      );
+
+      setBookings((prev) =>
+        prev.map((booking) =>
+          booking.$id === bookingId
+            ? { ...booking, status: BookingStatus.Rejected }
+            : booking
+        )
+      );
+
+      toast.success('Booking Rejected.');
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
+    }
+  };
+
   const renderStatus = () => {
     const userBooking = bookings.find((booking) => booking.userId === user.$id);
 
@@ -124,9 +151,14 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
                               <User className="text-yellow-600 h-4 w-4 mr-2" />
                               {booking.userName}
                             </span>
-                            <Button onClick={() => approveRequest(booking.$id)} className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-700 transition">
-                              Approve
-                            </Button>
+                            <div className="flex flex-row gap-4">
+                              <Button onClick={() => approveRequest(booking.$id)} className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-700 transition">
+                                Approve
+                              </Button>
+                              <Button onClick={() => rejectRequest(booking.$id)} className="bg-red-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-red-700 transition">
+                                Reject
+                              </Button>
+                            </div>
                           </div>
                         </li>
                       ))}
@@ -139,11 +171,22 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
           return (
             <div>
               <h1 className="text-xl font-bold mb-4">Ride Status: Filled</h1>
-              <p>The ride is fully booked and will depart at {new Date(ride.departureTime).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}.</p>
+              <p>The ride is fully booked and will depart at {adjustTime(ride.departureTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true })}.</p>
+              <h2 className="text-lg font-semibold mt-4">Poolers :</h2>
+              <ul>
+                {bookings
+                  .filter((booking) => booking.status === BookingStatus.Approved)
+                  .map((booking) => (
+                    <li key={booking.$id} className="flex items-center mt-2">
+                      <User className="text-green-600 h-4 w-4 mr-2" />
+                      <span className="text-gray-900 font-medium">{booking.userName}</span>
+                    </li>
+                  ))}
+              </ul>
             </div>
           );
         case 'completed':
-          return null
+          return null;
         default:
           return null;
       }
@@ -164,11 +207,7 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
                 <h1 className="text-xl font-bold mb-4">Ride Status: Active</h1>
                 <p>
                   You have been approved for the ride. It will depart at{' '}
-                  {new Date(ride.departureTime).toLocaleTimeString('en-IN', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true,
-                  })}
+                  {adjustTime(ride.departureTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true })}
                   .
                 </p>
               </div>
