@@ -45,11 +45,11 @@ const ProfilePage = () => {
           [Query.equal('offeredBy', user.$id)]
         );
 
-        // Fetch rides booked by the user
+        // Fetch bookings made by the user
         const bookedRidesResponse = await databases.listDocuments(
           process.env.NEXT_PUBLIC_DB_ID as string,
-          process.env.NEXT_PUBLIC_COLLECTION_ID as string,
-          [Query.equal('bookedBy', user.$id)]
+          process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,
+          [Query.equal('userId', user.$id)]
         );
 
         setOfferedRides(offeredRidesResponse.documents);
@@ -81,94 +81,103 @@ const ProfilePage = () => {
 
   if (loading) {
     return (
-      <div className="loader">
-        <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        <p>Loading...</p>
+      <div className="mx-auto w-full max-w-lg p-4">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-gray-300 rounded w-1/2 mb-4"></div>
+          <div className="h-4 bg-gray-300 rounded w-1/4 mb-6"></div>
+          <div className="h-32 bg-gray-300 rounded-lg mb-4"></div>
+          <div className="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
+          <div className="h-4 bg-gray-300 rounded w-1/2 mb-4"></div>
+          <div className="h-32 bg-gray-300 rounded-lg mb-4"></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto w-full max-w-lg  p-4">
+    <div className="mx-auto w-full max-w-lg p-4">
       <Button className='mb-4 hover:border-2' variant="link"><ArrowLeft className='mr-2'/><a href="/">BACK</a></Button>
 
       {user ? (
         <>
           <UserInfo user={user} />
-          {/* <Notifications userId={user.$id} /> */}
           <Tabs defaultValue="Booked" className='border-2 border-black mt-8 p-6 bg-gray-100' >
-      <TabsList className="grid grid-cols-2 w-75  w-[280px]  items-center mx-auto justify-center">
-        <TabsTrigger value="Booked">Booked rides</TabsTrigger>
-        <TabsTrigger value="Offered">Offered rides</TabsTrigger>
-      </TabsList>
-      <TabsContent value="Offered">
-      <h2 className="text-xl font-bold mt-6">Rides Offered</h2>
-          {offeredRides.length > 0 ? (
-            <ul className="mt-4 space-y-4">
-              {offeredRides.map((ride) => (
-                <li key={ride.$id} className="border p-4 rounded-lg shadow-lg bg-white/80 blur-background">
-                  <p><strong>Ride ID:</strong> {ride.$id}</p>
-                  <p><strong>From:</strong> {ride.pickupLocation}</p>
-                  <p><strong>To:</strong> {ride.dropoffLocation}</p>
-                  <p><strong>Time :</strong><time>
-                    {new Date(ride.$createdAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                    })}, 
-                    {new Date(ride.$createdAt).toLocaleTimeString('en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      hour12: true,
-                    })}
-                  </time></p>
-                  
-                  {/* Add more fields as needed */}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No rides offered.</p>
-          )}
-      </TabsContent>
-      <TabsContent value="Booked">
-      <h2 className="text-xl font-bold mt-6">Rides Booked</h2>
-          {bookedRides.length > 0 ? (
-            <ul className="mt-4 space-y-4">
-              {bookedRides.map((ride) => (
-                <li key={ride.$id} className="border p-4 rounded-lg shadow-lg bg-white/80 blur-background">
-                  <p><strong>Ride ID:</strong> {ride.$id}</p>
-                  <p><strong>From:</strong> {ride.pickupLocation}</p>
-                  <p><strong>To:</strong> {ride.dropoffLocation}</p>
-                  <p><strong>Time :</strong><time>
-                    {new Date(ride.$createdAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                    })}, 
-                    {new Date(ride.$createdAt).toLocaleTimeString('en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      hour12: true,
-                    })}
-                  </time></p>
-                  <p><strong>Offered By:</strong> {ride.offeredBy}</p>
-                  <p><strong>Booked By:</strong> {ride.bookedBy}</p>
-                  {/* Add more fields as needed */}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No rides booked.</p>
-          )}
-      </TabsContent>
-    </Tabs>
-         
+            <TabsList className="grid grid-cols-2 w-75 w-[280px] items-center mx-auto justify-center">
+              <TabsTrigger value="Booked">Booked rides</TabsTrigger>
+              <TabsTrigger value="Offered">Offered rides</TabsTrigger>
+            </TabsList>
+            <TabsContent value="Offered">
+              <h2 className="text-xl font-bold mt-6">Rides Offered</h2>
+              {offeredRides.length > 0 ? (
+                <ul className="mt-4 space-y-4">
+                  {offeredRides.map((ride) => (
+                    <li key={ride.$id} className="border p-4 rounded-lg shadow-lg bg-white/80 blur-background">
+                      <p><strong>Ride ID:</strong> {ride.$id}</p>
+                      <p><strong>From:</strong> {ride.pickupLocation}</p>
+                      <p><strong>To:</strong> {ride.dropoffLocation}</p>
+                      <p><strong>Time :</strong><time>
+                        {new Date(ride.$createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                        })}, 
+                        {new Date(ride.$createdAt).toLocaleTimeString('en-US', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: true,
+                        })}
+                      </time></p>
 
-        
+                      {/* Fetch and display the bookings */}
+                      <h3 className="mt-4 text-lg font-semibold">Bookings:</h3>
+                      {ride.bookedBy && ride.bookedBy.length > 0 ? (
+                        <ul>
+                          {ride.bookedBy.map((bookingId: string) => (
+                            <li key={bookingId}>
+                              {/* Fetch booking details */}
+                              {/* You can create a separate component or function to fetch and display booking details */}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>No bookings for this ride.</p>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No rides offered.</p>
+              )}
+            </TabsContent>
+            <TabsContent value="Booked">
+              <h2 className="text-xl font-bold mt-6">Rides Booked</h2>
+              {bookedRides.length > 0 ? (
+                <ul className="mt-4 space-y-4">
+                  {bookedRides.map((booking) => (
+                    <li key={booking.$id} className="border p-4 rounded-lg shadow-lg bg-white/80 blur-background">
+                      <p><strong>Booking ID:</strong> {booking.$id}</p>
+                      <p><strong>Ride ID:</strong> {booking.rideId}</p>
+                      <p><strong>Status:</strong> {booking.status}</p>
+                      <p><strong>Time :</strong><time>
+                        {new Date(booking.$createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                        })}, 
+                        {new Date(booking.$createdAt).toLocaleTimeString('en-US', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: true,
+                        })}
+                      </time></p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No rides booked.</p>
+              )}
+            </TabsContent>
+          </Tabs>
         </>
       ) : (
         <p>User not found.</p>
