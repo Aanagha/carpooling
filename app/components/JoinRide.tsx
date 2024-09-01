@@ -49,6 +49,7 @@ const JoinRide: React.FC = () => {
       const message = await joinRide(rideId, user);
       toast.success(message);
       setRides(prevRides => prevRides.map(r => r.$id === rideId ? { ...r, availableSeats: r.availableSeats - 1 } : r));
+      window.location.reload()
     } catch (error: any) {
       toast.error(error.message || 'Failed to join the ride.');
     }

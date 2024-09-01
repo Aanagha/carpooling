@@ -30,7 +30,7 @@ const ContactUs = () => {
         feedbackData
       );
 
-      toast.success('Your message has been sent successfully!');
+      toast.success('Your message has been sent successfully!',{ position: 'top-center' });
       setName('');
       setEmail('');
       setMessage('');

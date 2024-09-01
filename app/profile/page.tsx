@@ -73,7 +73,7 @@ const ProfilePage = () => {
       window.location.href = '/';
     } catch (error) {
       console.error("Logout failed:", error);
-      toast('Failed to logout. Please try again.');
+      toast('Failed to logout. Please try again.',{ position: 'top-center',className:'bg-red-500' });
     } finally {
       setLoading(false);
     }

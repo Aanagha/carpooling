@@ -58,7 +58,7 @@ const Hero = ({ user }:{user:any}) => {
           </div>
         </>
       ) : (
-        <div className="m-auto  justify-center px-3">
+        <div className="mx-auto px-3">
           <h1 className="text-3xl text-left lg:text-center lg:text-6xl mb-4 font-bold">
             Welcome!<br /> <Cover className="italic capitalize">{user.name}</Cover>
           </h1>

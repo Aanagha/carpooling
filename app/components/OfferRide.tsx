@@ -49,6 +49,7 @@ const OfferRide: React.FC = () => {
       };
       await createRide(rideData);
       toast('Ride successfully created!');
+      window.location.reload();
     } catch (error) {
       console.error('Failed to create ride:', error);
     }
