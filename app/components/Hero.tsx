@@ -7,6 +7,7 @@ import Image from 'next/image';
 
 import Register from './Register';
 import { UserTabs } from './UserTabs';
+import { ArrowBigRight, ArrowRight } from 'lucide-react';
 
 const Hero = ({ user }:{user:any}) => {
   return (
@@ -17,17 +18,17 @@ const Hero = ({ user }:{user:any}) => {
             <h1 className="text-3xl md:text-4xl lg:text-6xl font-semibold max-w-7xl mx-auto text-left lg:text-center mt-6 relative z-20 pt-6 pb-2 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white ">
               <Cover>Ride Together</Cover>, Save Together
             </h1>
-            <h2 className="text-left text-lg lg:text-xl font-bold my-3 max-w-md mx-auto">
+            <h2 className="text-left text-lg  my-3 max-w-md mx-auto">
               Discover the convenience of carpooling, reduce fuel costs, and enhance your experience.
             </h2>
             <DrawerDemo
               trigger={
                 <Button
-                  className="m-auto mt-4 hover:border-t-4 border-white hover:border-black border-2 bg-black text-white hover:text-black rounded-tl-full rounded-br-full"
+                  className="mx-auto pr-1 mt-4 hover:border-t-4 border-white hover:border-black border-2 bg-black text-white hover:text-black rounded-full"
                   variant="default"
                   size="lg"
                 >
-                  Get started
+                  Get started <span className='rounded-full bg-white p-1 ml-4'><ArrowRight className='text-black'/></span>
                 </Button>
               }
               variant="default"

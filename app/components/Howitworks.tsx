@@ -9,7 +9,7 @@ const Howitworks = () => {
         {[
           { title: "Register", description: "Create an account in minutes using your email.", bg:'bg-white' },
           { title: "Find a Ride", description: " Browse available carpool options or  Offer a ride: post your own ride.", bg:'bg-[#CBF08E]' },
-          { title: "Reserve  and Confirm", description: "Use our in-app coordinate with your carpool buddies, confirm the ride, and set pick-up locations.", bg:'bg-gray-200' }
+          { title: "Reserve", description: "Use our in-app coordinate with your carpool buddies, confirm the ride, and set pick-up locations.", bg:'bg-gray-200' }
         ].map((data, index) => (
    
 <div key={index}
@@ -22,8 +22,8 @@ const Howitworks = () => {
     ></div>
   </figure>
   <div className="absolute text-nuetral-800 top-12 left-0 px-4">
-    <span className="font-bold">{data.title}</span>
-    <p className="text-sm opacity-60 line-clamp-2">
+    <span className="font-bold ">{data.title}</span>
+    <p className="text-sm mt-2 opacity-60 line-clamp-3">
      {data.description}
     </p>
   </div>
