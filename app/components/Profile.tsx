@@ -62,7 +62,7 @@ import Login from "./Login";
             <div className="loader border-t-2 m-auto rounded-full border-gray-500 bg-gray-300 animate-spin
             aspect-square w-8 flex justify-center items-center text-yellow-700"></div> :  <div className="flex flex-row gap-0">
                                       <DrawerDemo trigger={  <Button
-              className={`m-auto hover:text-black hover:border-2 dark:text-white bg-black  `}
+              className={`m-auto hover:text-black hover:border-2 dark:text-white bg-black rounded-full  `}
               variant={'default'}
               size="lg"
             >
