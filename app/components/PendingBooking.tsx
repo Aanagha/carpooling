@@ -53,7 +53,7 @@ const PendingBooking: React.FC<PendingBookingProps> = ({ booking }) => {
       <p className="mb-2"><strong>User:</strong> {booking.name}</p>
       <p className="mb-2"><strong>Pickup Location:</strong> {ride.pickupLocation}</p>
       <p className="mb-2"><strong>Dropoff Location:</strong> {ride.dropoffLocation}</p>
-      <p className="mb-2"><strong>Departure Time:</strong> {adjustTime(ride.departureTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true })}</p>      <p className="mb-2"><strong>Status:</strong> {booking.status}</p>
+      <p className="mb-2"><strong>Departure Time:</strong> {adjustTime(ride.departureTime)}</p>      <p className="mb-2"><strong>Status:</strong> {booking.status}</p>
    
     </div>
   );

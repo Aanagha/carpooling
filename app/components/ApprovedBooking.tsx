@@ -47,10 +47,7 @@ const ApprovedBooking: React.FC<ApprovedBookingProps> = ({ booking }) => {
             <p className="text-lg text-gray-700 mb-4">
               Your booking has been approved. The ride will depart at{' '}
               <span className="font-semibold text-gray-900">
-                {adjustTime(departureTime).toLocaleString('en-IN', {
-                  timeZone: 'Asia/Kolkata',
-                  hour12: true,
-                })}
+                {adjustTime(departureTime)}
               </span>.
             </p>
           ) : (

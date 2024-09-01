@@ -20,7 +20,15 @@ export const displayISTTime = (utcTime:string) => {
 };
 export const adjustTime = (timeString: string) => {
   const date = new Date(timeString);
-  date.setHours(date.getHours() - 5);
-  date.setMinutes(date.getMinutes() - 30);
-  return date;
+  const readableDate = date.toLocaleString('en-IN', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'Asia/Kolkata'
+  });
+  return readableDate;
 };

@@ -10,14 +10,14 @@ import { UserTabs } from './UserTabs';
 
 const Hero = ({ user }:{user:any}) => {
   return (
-    <section className="text-center flex flex-col lg:flex-row min-h-screen justify-between  px-4 lg:px-20">
+    <section className=" container text-left lg:text-center flex flex-col lg:flex-row min-h-screen   px-4 lg:px-20">
       {!user ? (
         <>
           <div className="lg:w-1/2">
-            <h1 className="text-3xl md:text-4xl lg:text-6xl font-semibold max-w-7xl mx-auto text-center mt-6 relative z-20 pt-6 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white ">
+            <h1 className="text-3xl md:text-4xl lg:text-6xl font-semibold max-w-7xl mx-auto text-left lg:text-center mt-6 relative z-20 pt-6 pb-2 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white ">
               <Cover>Ride Together</Cover>, Save Together
             </h1>
-            <h2 className="text-center text-lg lg:text-xl font-bold my-3 max-w-md mx-auto">
+            <h2 className="text-left text-lg lg:text-xl font-bold my-3 max-w-md mx-auto">
               Discover the convenience of carpooling, reduce fuel costs, and enhance your experience.
             </h2>
             <DrawerDemo
@@ -58,10 +58,10 @@ const Hero = ({ user }:{user:any}) => {
         </>
       ) : (
         <div className="m-auto items-center justify-center px-3">
-          <h1 className="text-3xl text-center lg:text-6xl mb-4 font-bold">
+          <h1 className="text-3xl text-left lg:text-center lg:text-6xl mb-4 font-bold">
             Welcome!<br /> <Cover className="italic capitalize">{user.name}</Cover>
           </h1>
-          <p className="text-center text-lg text-gray-600 mb-6">
+          <p className="text-left lg:text-center text-lg text-gray-600 mb-6">
             Hop in! Connect with your next carpool.
           </p>
           <UserTabs />

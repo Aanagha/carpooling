@@ -18,63 +18,67 @@ const RideAndHeroManager: React.FC = () => {
   const [activeRide, setActiveRide] = useState<any>(null);
   const [booking, setBooking] = useState<any>(null);
 
-  useEffect(() => {
-    const fetchUserAndRides = async () => {
-      try {
-        const userData = await account.get();
-        setUser(userData as User);
+  const updateRideStatusIfNeeded = async (ride: any) => {
+    const currentTime = new Date().getTime();
+    const departureTime = new Date(ride.departureTime).getTime();
 
-        if (userData) {
-          // Fetch the active ride offered by the user
-          const offeredRides = await databases.listDocuments(
+    if (currentTime >= departureTime && ride.status !== "completed") {
+      await databases.updateDocument(
+        process.env.NEXT_PUBLIC_DB_ID as string,
+        process.env.NEXT_PUBLIC_COLLECTION_ID as string,
+        ride.$id,
+        { status: "completed" }
+      );
+      setActiveRide(null); // Trigger re-render to show the Hero component
+    } else {
+      setActiveRide(ride); // Keep the ride active if it's not completed yet
+    }
+  };
+
+  const fetchUserAndRides = async () => {
+    try {
+      const userData = await account.get();
+      setUser(userData as User);
+
+      if (userData) {
+        // Fetch the active ride offered by the user
+        const offeredRides = await databases.listDocuments(
+          process.env.NEXT_PUBLIC_DB_ID as string,
+          process.env.NEXT_PUBLIC_COLLECTION_ID as string,
+          [Query.equal("offeredBy", userData.$id)]
+        );
+
+        if (offeredRides.documents.length > 0) {
+          const ride = offeredRides.documents[0];
+          await updateRideStatusIfNeeded(ride);
+        } else {
+          // Check if the user has any bookings
+          const userBookings = await databases.listDocuments(
             process.env.NEXT_PUBLIC_DB_ID as string,
-            process.env.NEXT_PUBLIC_COLLECTION_ID as string,
-            [Query.equal("offeredBy", userData.$id)]
+            process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,
+            [Query.equal("userId", userData.$id)]
           );
 
-          if (offeredRides.documents.length > 0) {
-            const ride = offeredRides.documents[0];
-            const currentTime = new Date().getTime();
-            const departureTime = new Date(ride.departureTime).getTime();
-
-            if (currentTime >= departureTime && ride.status !== "completed") {
-              ride.status = "completed";
-              await databases.updateDocument(
-                process.env.NEXT_PUBLIC_DB_ID as string,
-                process.env.NEXT_PUBLIC_COLLECTION_ID as string,
-                ride.$id,
-                { status: "completed" }
-              );
-            }
-
-            setActiveRide(ride);
-          } else {
-            // Check if the user has any bookings
-            const userBookings = await databases.listDocuments(
-              process.env.NEXT_PUBLIC_DB_ID as string,
-              process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,
-              [Query.equal("userId", userData.$id)]
-            );
-
-            if (userBookings.documents.length > 0) {
-              const bookingData = userBookings.documents[0];
-              if (bookingData.status === BookingStatus.Rejected) {
-                // If the booking is rejected, don't set it, and redirect to Hero
-                setBooking(null);
-                return;
-              } else {
-                setBooking(bookingData);
-              }
+          if (userBookings.documents.length > 0) {
+            const bookingData = userBookings.documents[0];
+            if (bookingData.status === BookingStatus.Rejected) {
+              // If the booking is rejected, don't set it, and redirect to Hero
+              setBooking(null);
+              return;
+            } else {
+              setBooking(bookingData);
             }
           }
         }
-      } catch (error) {
-        console.error("User not logged in or failed to fetch rides:", error);
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("User not logged in or failed to fetch rides:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchUserAndRides();
 
     const unsubscribe = client.subscribe(
@@ -111,16 +115,18 @@ const RideAndHeroManager: React.FC = () => {
     );
   }
 
-  if (activeRide) {
+  if (activeRide && activeRide.status !=='completed') {
     return <RideStatus ride={activeRide} user={user} />;
   }
 
   if (booking && booking.status === BookingStatus.Approved) {
-    return <ApprovedBooking booking={booking}  />;
+    return <ApprovedBooking booking={booking} />;
   }
+  
   if (booking && booking.status === BookingStatus.Pending) {
-    return <PendingBooking booking={booking}  />;
+    return <PendingBooking booking={booking} />;
   }
+  
   return <Hero user={user} />;
 };
 

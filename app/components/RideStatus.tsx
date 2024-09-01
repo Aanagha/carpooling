@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from 'react';
 import { client, databases } from '@/lib/appwrite';
 import { BookingStatus } from '@/lib/rides';
@@ -15,13 +15,14 @@ interface RideStatusProps {
 const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
   const [bookings, setBookings] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [currentRide, setCurrentRide] = useState(ride); // Added this line
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        if (ride.bookedBy && ride.bookedBy.length > 0) {
+        if (currentRide.bookedBy && currentRide.bookedBy.length > 0) {
           const bookingResponses = await Promise.all(
-            ride.bookedBy.map(async (bookingId: string) => {
+            currentRide.bookedBy.map(async (bookingId: string) => {
               const booking = await databases.getDocument(
                 process.env.NEXT_PUBLIC_DB_ID as string,
                 process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID as string,
@@ -50,10 +51,14 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
     fetchBookings();
 
     const unsubscribe = client.subscribe(
-      `databases.${process.env.NEXT_PUBLIC_DB_ID}.collections.${process.env.NEXT_PUBLIC_BOOKINGS_COLLECTION_ID}.documents`,
-      (response) => {
+      `databases.${process.env.NEXT_PUBLIC_DB_ID}.collections.${process.env.NEXT_PUBLIC_COLLECTION_ID}.documents.${currentRide.$id}`,
+      (response:any) => {
         if (response.events.includes('databases.*.collections.*.documents.*.update')) {
           fetchBookings();
+          // Update the ride status if it's changed
+          if (response.payload.status !== currentRide.status) {
+            setCurrentRide(response.payload); // Update the ride state
+          }
         }
       }
     );
@@ -61,7 +66,7 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
     return () => {
       unsubscribe();
     };
-  }, [ride]);
+  }, [currentRide]);
 
   const approveRequest = async (bookingId: string) => {
     try {
@@ -75,14 +80,14 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
       );
 
       const updatedRide = {
-        availableSeats: ride.availableSeats - 1,
-        status: ride.availableSeats - 1 === 0 ? 'filled' : 'active',
+        availableSeats: currentRide.availableSeats - 1,
+        status: currentRide.availableSeats - 1 === 0 ? 'filled' : 'active',
       };
 
       await databases.updateDocument(
         process.env.NEXT_PUBLIC_DB_ID as string,
         process.env.NEXT_PUBLIC_COLLECTION_ID as string,
-        ride.$id,
+        currentRide.$id,
         updatedRide
       );
 
@@ -93,6 +98,12 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
             : booking
         )
       );
+
+      setCurrentRide((prev:any) => ({
+        ...prev,
+        availableSeats: prev.availableSeats - 1,
+        status: prev.availableSeats - 1 === 0 ? 'filled' : 'active',
+      }));
 
       toast.success('Booking approved.');
     } catch (err: any) {
@@ -120,7 +131,7 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
         )
       );
 
-      toast.success('Booking Rejected.');
+      toast.success('Booking rejected.');
     } catch (err: any) {
       setError(err.message);
       toast.error(err.message);
@@ -130,14 +141,14 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
   const renderStatus = () => {
     const userBooking = bookings.find((booking) => booking.userId === user.$id);
 
-    if (ride.offeredBy === user.$id) {
+    if (currentRide.offeredBy === user.$id) {
       // Offerer view
-      switch (ride.status) {
+      switch (currentRide.status) {
         case 'active':
           return (
             <div>
-              <h1 className="text-xl font-bold mb-4">Ride Status: Active</h1>
-              <p>Seats Available: {ride.availableSeats}</p>
+              <span className="text-sm bg-green-200 p-2 rounded-full fixed top-4 right-4 font-bold mb-4">active</span>
+              <p>Seats Available: {currentRide.availableSeats}</p>
               {bookings.some((booking) => booking.status === BookingStatus.Pending) && (
                 <>
                   <h2 className="text-lg font-semibold mb-2">Pending Requests</h2>
@@ -170,8 +181,8 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
         case 'filled':
           return (
             <div>
-              <h1 className="text-xl font-bold mb-4">Ride Status: Filled</h1>
-              <p>The ride is fully booked and will depart at {adjustTime(ride.departureTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true })}.</p>
+              <span className="text-sm bg-blue-200 p-2 rounded-full fixed top-4 right-4 font-bold mb-4">filled</span>
+              <p>The ride is fully booked and will depart at {adjustTime(currentRide.departureTime)}.</p>
               <h2 className="text-lg font-semibold mt-4">Poolers :</h2>
               <ul>
                 {bookings
@@ -186,7 +197,12 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
             </div>
           );
         case 'completed':
-          return null;
+          return (
+            <div>
+              <span className="text-sm bg-gray-200 p-2 rounded-full fixed top-4 right-4 font-bold mb-4">completed</span>
+              <p>The ride has been completed.</p>
+            </div>
+          );
         default:
           return null;
       }
@@ -197,26 +213,33 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
           case BookingStatus.Pending:
             return (
               <div>
-                <h1 className="text-xl font-bold mb-4">Ride Status: Pending</h1>
+                <span className="text-sm bg-red-200 p-2 rounded-full fixed top-4 right-4 font-bold mb-4">pending</span>
                 <p>Your ride request is pending approval.</p>
               </div>
             );
           case BookingStatus.Approved:
             return (
               <div>
-                <h1 className="text-xl font-bold mb-4">Ride Status: Active</h1>
+                <span className="text-sm bg-blue-200 p-2 rounded-full fixed top-4 right-4 font-bold mb-4">active</span>
                 <p>
                   You have been approved for the ride. It will depart at{' '}
-                  {adjustTime(ride.departureTime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true })}
+                  {adjustTime(currentRide.departureTime)}
                   .
                 </p>
+              </div>
+            );
+          case BookingStatus.Rejected:
+            return (
+              <div>
+                <span className="text-sm bg-red-200 p-2 rounded-full fixed top-4 right-4 font-bold mb-4">rejected</span>
+                <p>Your ride request has been rejected.</p>
               </div>
             );
           case 'completed':
             return (
               <div>
-                <h1 className="text-xl font-bold mb-4">Ride Status: Completed</h1>
-                <p>Your ride has been completed. Thank you for using our service!</p>
+                <span className="text-sm bg-gray-200 p-2 rounded-full fixed top-4 right-4 font-bold mb-4">completed</span>
+                <p>Your ride has been completed.</p>
               </div>
             );
           default:
@@ -229,10 +252,13 @@ const RideStatus: React.FC<RideStatusProps> = ({ ride, user }) => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-green-600 to-green-400 p-4">
-      <div className="backdrop-blur-2xl bg-white/40 rounded-xl shadow-lg p-6 md:p-8 max-w-full md:max-w-lg w-full transition-transform transform hover:scale-105 hover:shadow-2xl">
+    <div className="flex justify-center items-center min-h-screen p-4">
+      <div className="backdrop-blur-2xl border rounded-xl shadow-lg p-6 md:p-8 max-w-full md:max-w-lg w-full transition-transform transform hover:scale-105 hover:shadow-2xl">
         {error && <p className="text-red-500 mb-4">{error}</p>}
-        {ride && renderStatus()}
+        {currentRide && renderStatus()}
+        <p>From : {currentRide.pickupLocation}</p>
+        <p>To : {currentRide.dropoffLocation}</p>
+        <p>{adjustTime(currentRide.departureTime)}</p>
       </div>
     </div>
   );
