@@ -7,24 +7,24 @@ import Image from 'next/image';
 
 import Register from './Register';
 import { UserTabs } from './UserTabs';
-import { ArrowBigRight, ArrowRight } from 'lucide-react';
+import {  ArrowRight } from 'lucide-react';
 
 const Hero = ({ user }:{user:any}) => {
   return (
-    <section className=" container text-left lg:text-center flex flex-col lg:flex-row min-h-screen   px-4 lg:px-20">
+    <section className=" text-center  flex flex-col lg:flex-row min-h-screen   px-4 lg:px-20">
       {!user ? (
         <>
           <div className="lg:w-1/2">
             <h1 className="text-3xl md:text-4xl lg:text-6xl font-semibold max-w-7xl mx-auto text-left lg:text-center mt-6 relative z-20 pt-6 pb-2 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-white dark:to-white ">
               <Cover>Ride Together</Cover>, Save Together
             </h1>
-            <h2 className="text-left text-lg  my-3 max-w-md mx-auto">
+            <h2 className="text-left text-lg mt-4 mb-6 max-w-md mx-auto">
               Discover the convenience of carpooling, reduce fuel costs, and enhance your experience.
             </h2>
             <DrawerDemo
               trigger={
                 <Button
-                  className="mx-auto pr-1 mt-4 hover:border-t-4 border-white hover:border-black border-2 bg-black text-white hover:text-black rounded-full"
+                  className="mx-auto pr-1 hover:border-t-4 border-white hover:border-black border-2 bg-black text-white hover:text-black rounded-full"
                   variant="default"
                   size="lg"
                 >
@@ -58,7 +58,7 @@ const Hero = ({ user }:{user:any}) => {
           </div>
         </>
       ) : (
-        <div className="m-auto items-center justify-center px-3">
+        <div className="m-auto  justify-center px-3">
           <h1 className="text-3xl text-left lg:text-center lg:text-6xl mb-4 font-bold">
             Welcome!<br /> <Cover className="italic capitalize">{user.name}</Cover>
           </h1>

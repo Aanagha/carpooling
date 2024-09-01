@@ -75,15 +75,15 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 md:p-6 lg:p-8 max-h-screen overflow-y-auto">
-      <div className="max-w-2xl mx-auto rounded-lg p-6 md:p-8">
-        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Register</h1>
+    <div className=" mx-auto p-2 max-h-screen overflow-y-auto">
+      <div className="mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 p-4 md:p-6 lg:p-12">
+        <h1 className="col-span-1 md:col-span-2 text-2xl font-bold mb-4 text-center">Register</h1>
         <form
           onSubmit={(e) => {
             e.preventDefault();
             register();
           }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 space-y-4 md:space-y-0"
         >
           <div className="flex flex-col">
             <Label className="text-sm font-bold mb-2" htmlFor="name">
@@ -96,7 +96,7 @@ const Register: React.FC = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="p-2 border border-gray-600 rounded-md w-full focus:ring-blue-500 focus:border-blue-500"
+              className="p-2 border border-gray-800 rounded-md w-full"
             />
           </div>
           <div className="flex flex-col">
@@ -110,7 +110,7 @@ const Register: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="p-2 border border-gray-600 rounded-md w-full focus:ring-blue-500 focus:border-blue-500"
+              className="p-2 border border-gray-800 rounded-md w-full"
             />
           </div>
           <div className="flex flex-col">
@@ -124,7 +124,7 @@ const Register: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="p-2 border border-gray-600 rounded-md w-full focus:ring-blue-500 focus:border-blue-500"
+              className="p-2 border border-gray-800 rounded-md w-full"
             />
           </div>
           <div className="flex flex-col">
@@ -138,7 +138,7 @@ const Register: React.FC = () => {
               value={collegeId}
               onChange={(e) => setCollegeId(e.target.value)}
               required
-              className="p-2 border border-gray-600 rounded-md w-full focus:ring-blue-500 focus:border-blue-500"
+              className="p-2 border border-gray-800 rounded-md w-full"
             />
           </div>
           <div className="flex flex-col col-span-1 md:col-span-2">
@@ -150,12 +150,12 @@ const Register: React.FC = () => {
                 {preferredLocations.map((location, index) => (
                   <div
                     key={index}
-                    className="flex items-center px-3 py-1 border-2 border-gray-400 bg-white text-gray-700 rounded-full"
+                    className="flex items-center px-3 py-1 border-2 border-gray-400 blur-background bg-white/80 text-black rounded-full"
                   >
                     <span>{location}</span>
                     <button
                       type="button"
-                      className="ml-2 text-red-500"
+                      className="ml-2"
                       onClick={() => removeLocation(location)}
                     >
                       &times;
@@ -169,7 +169,7 @@ const Register: React.FC = () => {
               multiple
               value={preferredLocations}
               onChange={handleLocationChange}
-              className="p-2 border border-gray-600 rounded-md w-full bg-white focus:ring-blue-500 focus:border-blue-500"
+              className="p-2 border border-gray-800 rounded-md w-full bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-300"
             >
               {locations.map((location, index) => (
                 <option key={index} value={location}>
