@@ -75,8 +75,8 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className=" mx-auto p-2 max-h-screen overflow-y-auto">
-      <div className="mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 p-4 md:p-6 lg:p-12">
+    <div className=" px-8 max-h-screen overflow-y-auto">
+      <div className=" grid grid-cols-1 md:grid-cols-2 gap-6 ">
         <h1 className="col-span-1 md:col-span-2 text-2xl font-bold mb-4 text-center">Register</h1>
         <form
           onSubmit={(e) => {
