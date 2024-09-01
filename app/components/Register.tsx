@@ -12,28 +12,10 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [collegeId, setCollegeId] = useState<string>("");
-  const [preferredLocations, setPreferredLocations] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [locations, setLocations] = useState<string[]>([]);
 
-  useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        const response = await databases.listDocuments(
-          process.env.NEXT_PUBLIC_DB_ID as string,
-          process.env.NEXT_PUBLIC_LOCATION_COLLECTION_ID as string
-        );
 
-        const locationNames = response.documents.map((doc: any) => doc.name);
-        setLocations(locationNames);
-      } catch (error) {
-        console.error("Failed to fetch locations:", error);
-      }
-    };
-
-    fetchLocations();
-  }, []);
-
+ 
   const register = async () => {
     setLoading(true);
     try {
@@ -47,7 +29,7 @@ const Register: React.FC = () => {
           email: email,
           username: name,
           clgId: collegeId,
-          preferredLocations: preferredLocations,
+          
         }
       );
 
@@ -63,16 +45,6 @@ const Register: React.FC = () => {
     }
   };
 
-  const handleLocationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
-    setPreferredLocations(selectedOptions);
-  };
-
-  const removeLocation = (locationToRemove: string) => {
-    setPreferredLocations((locations) =>
-      locations.filter((location) => location !== locationToRemove)
-    );
-  };
 
   return (
     <div className=" px-8 max-h-screen overflow-y-auto">
@@ -141,44 +113,7 @@ const Register: React.FC = () => {
               className="p-2 border border-gray-800 rounded-md w-full"
             />
           </div>
-          <div className="flex flex-col col-span-1 md:col-span-2">
-            <Label className="text-sm font-bold mb-2" htmlFor="preferredLocations">
-              Preferred Locations
-            </Label>
-            {preferredLocations.length > 0 && (
-              <div className="flex flex-wrap gap-2 my-2">
-                {preferredLocations.map((location, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center px-3 py-1 border-2 border-gray-400 blur-background bg-white/80 text-black rounded-full"
-                  >
-                    <span>{location}</span>
-                    <button
-                      type="button"
-                      className="ml-2"
-                      onClick={() => removeLocation(location)}
-                    >
-                      &times;
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-            <select
-              id="preferredLocations"
-              multiple
-              value={preferredLocations}
-              onChange={handleLocationChange}
-              className="p-2 border border-gray-800 rounded-md w-full bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-300"
-            >
-              {locations.map((location, index) => (
-                <option key={index} value={location}>
-                  {location}
-                </option>
-              ))}
-            </select>
-          </div>
-
+         
           <div className="col-span-1 md:col-span-2">
             <Button
               type="submit"
